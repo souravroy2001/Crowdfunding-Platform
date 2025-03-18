@@ -1,13 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router";
-
-const heroStyle = {
-  position: "relative",
-  overflow: "hidden",
-  background: "var(--nav-background)",
-  paddingTop: "14rem",
-  textAlign: "center",
-};
 
 const heroBeforeStyle = {
   content: '""',
@@ -18,9 +11,20 @@ const heroBeforeStyle = {
 };
 
 function Home() {
+  const theme = useSelector((state) => state.theme);
+
   return (
-    <main className="relative pt-16">
-      <section className="hero" style={heroStyle}>
+    <main>
+      <section
+        className="hero"
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          paddingTop: "14rem",
+          textAlign: "center",
+          background: theme ? "#333" : "#1f2937",
+        }}
+      >
         <div style={heroBeforeStyle}></div>
         <div className="hero-content">
           <h1>
@@ -46,20 +50,28 @@ function Home() {
       <section className="section-container">
         <div className="stats-grid">
           <div className="stat-item">
-            <p>$128M+</p>
-            <p>Total Funds Raised</p>
+            <p style={{ fontSize: "1.5rem", fontWeight: "bold", margin: "0" }}>
+              $128M+
+            </p>
+            <p style={{ fontSize: "1rem", margin: "0" }}>Total Funds Raised</p>
           </div>
           <div className="stat-item">
-            <p>15,000+</p>
-            <p>Successful Projects</p>
+            <p style={{ fontSize: "1.5rem", fontWeight: "bold", margin: "0" }}>
+              15,000+
+            </p>
+            <p style={{ fontSize: "1rem", margin: "0" }}>Successful Projects</p>
           </div>
           <div className="stat-item">
-            <p>2.5M+</p>
-            <p>Global Backers</p>
+            <p style={{ fontSize: "1.5rem", fontWeight: "bold", margin: "0" }}>
+              2.5M+
+            </p>
+            <p style={{ fontSize: "1rem", margin: "0" }}>Global Backers</p>
           </div>
           <div className="stat-item">
-            <p>94%</p>
-            <p>Success Rate</p>
+            <p style={{ fontSize: "1.5rem", fontWeight: "bold", margin: "0" }}>
+              94%
+            </p>
+            <p style={{ fontSize: "1rem", margin: "0" }}>Success Rate</p>
           </div>
         </div>
       </section>
@@ -148,10 +160,15 @@ function Home() {
         </div>
       </section>
       <section className="discover-projects-container">
-        <section className="campaign-categories">
+        <section
+          className="campaign-categories"
+          style={{ background: !theme && "#1f2937" }}
+        >
           <div className="text-center">
-            <h2>Campaign Categories</h2>
-            <p>Discover projects across various industries</p>
+            <h2 style={{ color: !theme && "#fff" }}>Campaign Categories</h2>
+            <p style={{ color: !theme && "#ccc" }}>
+              Discover projects across various industries
+            </p>
           </div>
           <div className="grid">
             <div className="category-box">
@@ -184,15 +201,32 @@ function Home() {
           </div>
 
           <div className="grid success-stories-box">
-            <div className="story-box">
+            <div
+              className="story-box"
+              style={{
+                background: !theme && "#1f2937",
+                color: !theme && "#fff",
+              }}
+            >
               <div className="story-header">
                 <img src="/Success Stories-1.jpg" alt="Sarah Johnson" />
                 <div>
                   <h3>Sarah Johnson</h3>
-                  <p>Eco-Friendly Products</p>
+                  <p
+                    style={{
+                      color: !theme && "#ccc",
+                    }}
+                  >
+                    Eco-Friendly Products
+                  </p>
                 </div>
               </div>
-              <p className="story-header-text">
+              <p
+                className="story-header-text"
+                style={{
+                  color: !theme && "#fff",
+                }}
+              >
                 "The platform made it incredibly easy to share our vision and
                 connect with like-minded supporters. We exceeded our funding
                 goal by 200%!"
@@ -206,15 +240,32 @@ function Home() {
               </div>
             </div>
 
-            <div className="story-box">
+            <div
+              className="story-box"
+              style={{
+                background: !theme && "#1f2937",
+                color: !theme && "#fff",
+              }}
+            >
               <div className="story-header">
                 <img src="/Success Stories-2.jpg" alt="Michael Chen" />
                 <div>
                   <h3>Michael Chen</h3>
-                  <p>Tech Innovation</p>
+                  <p
+                    style={{
+                      color: !theme && "#ccc",
+                    }}
+                  >
+                    Tech Innovation
+                  </p>
                 </div>
               </div>
-              <p className="story-header-text">
+              <p
+                className="story-header-text"
+                style={{
+                  color: !theme && "#fff",
+                }}
+              >
                 "From concept to launch, the support we received was incredible.
                 Our community of backers helped us refine and improve our
                 product."
@@ -228,15 +279,32 @@ function Home() {
               </div>
             </div>
 
-            <div className="story-box">
+            <div
+              className="story-box"
+              style={{
+                background: !theme && "#1f2937",
+                color: !theme && "#fff",
+              }}
+            >
               <div className="story-header">
                 <img src="/Success Stories-3.jpg" alt="Emma Rodriguez" />
                 <div>
                   <h3>Emma Rodriguez</h3>
-                  <p>Art & Design</p>
+                  <p
+                    style={{
+                      color: !theme && "#ccc",
+                    }}
+                  >
+                    Art & Design
+                  </p>
                 </div>
               </div>
-              <p className="story-header-text">
+              <p
+                className="story-header-text"
+                style={{
+                  color: !theme && "#fff",
+                }}
+              >
                 "As an artist, I was amazed by how the platform helped me reach
                 art enthusiasts globally. The exposure was beyond my
                 expectations."
@@ -319,11 +387,28 @@ function Home() {
             </div>
           </div>
         </section>
-        <section className="faq-section">
+        <section
+          className="faq-section"
+          style={{
+            background: !theme && "#1f2937",
+          }}
+        >
           <div className="faq-container">
             <div className="faq-header">
-              <h2>Frequently Asked Questions</h2>
-              <p>Find answers to common questions about our platform</p>
+              <h2
+                style={{
+                  color: !theme && "#fff",
+                }}
+              >
+                Frequently Asked Questions
+              </h2>
+              <p
+                style={{
+                  color: !theme && "#ccc",
+                }}
+              >
+                Find answers to common questions about our platform
+              </p>
             </div>
             <div className="faq-list">
               <details className="faq-item">
@@ -371,13 +456,13 @@ function Home() {
 
                 {/* <!-- App Buttons --> */}
                 <div className="mobile-app-buttons">
-                  <Link to={'/'} className="app-store-button">
+                  <Link to={"/"} className="app-store-button">
                     <img
                       src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
                       alt="App Store"
                     />
                   </Link>
-                  <Link to={'/'} className="play-store-button">
+                  <Link to={"/"} className="play-store-button">
                     <img
                       src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
                       alt="Play Store"
@@ -418,10 +503,29 @@ function Home() {
               </div>
             </div>
           </section>
-          <section className="platform-stats-section" id="platform-stats">
+          <section
+            className="platform-stats-section"
+            style={{
+              background: !theme && "#1f2937",
+              color: !theme && "#fff",
+            }}
+            id="platform-stats"
+          >
             <div className="stats-header">
-              <h2>Platform Statistics</h2>
-              <p>Our growth and impact in numbers</p>
+              <h2
+                style={{
+                  color: !theme && "#fff",
+                }}
+              >
+                Platform Statistics
+              </h2>
+              <p
+                style={{
+                  color: !theme && "#ccc",
+                }}
+              >
+                Our growth and impact in numbers
+              </p>
             </div>
             <div className="stats-container">
               <div className="stats-box">
@@ -561,20 +665,41 @@ function Home() {
             </div>
           </section>
         </section>
-        <section className="cta-section">
+        <section
+          className="cta-section"
+          style={{
+            background: !theme && "#1f2937",
+          }}
+        >
           <div className="cta-container">
-            <h2>Ready to bring your idea to life?</h2>
-            <p>
+            <h2
+              style={{
+                color: !theme && "#fff",
+              }}
+            >
+              Ready to bring your idea to life?
+            </h2>
+            <p
+              style={{
+                color: !theme && "#ccc",
+              }}
+            >
               Join thousands of successful creators who have turned their dreams
               into reality.
             </p>
             <div className="cta-buttons">
-              <a href="#" className="cta-primary">
+              <Link to={"/register"} className="cta-primary">
                 Start Your Campaign
-              </a>
-              <a href="#" className="cta-secondary">
+              </Link>
+              <Link
+                to={"/"}
+                style={{
+                  color: !theme && "#fff",
+                }}
+                className="cta-secondary"
+              >
                 Learn more →
-              </a>
+              </Link>
             </div>
           </div>
         </section>

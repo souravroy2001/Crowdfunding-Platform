@@ -24,8 +24,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: var(--background-color);
-  color: var(--primary-text);
+  /* color: #bbc1c9; */
 }
 
 .header {
@@ -34,7 +33,7 @@ body {
   left: 0;
   right: 0;
   z-index: 50;
-  background: var(--nav-background);
+  /* color: #e9ebef5b; */
   backdrop-filter: blur(5px);
   border-bottom: 1px solid var(--border-color);
 }
@@ -61,10 +60,10 @@ body {
 
 .nav-links a {
   text-decoration: none;
-  font-size: var(--font-size-small);
-  font-weight: var(--font-weight-bold);
-  margin: 0 var(--spacing-small);
-  color: var(--primary-text);
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0 5px;
+  font-variant: small-caps;
 }
 
 .nav-actions {
@@ -76,9 +75,10 @@ body {
 .sign-in {
   display: none;
   text-decoration: none;
-  color: var(--secondary-text);
-  font-size: var(--font-size-small);
-  font-weight: var(--font-weight-bold);
+  font-size: 16px;
+  font-weight: 500;
+  /* color: #99999b; */
+  font-variant: small-caps;
 }
 .start-campaign {
   text-decoration: none;
@@ -203,12 +203,10 @@ body {
 .stat-item p:first-child {
   font-size: 2rem;
   font-weight: var(--font-weight-bold);
-  color: var(--color-dark);
 }
 
 .stat-item p:last-child {
   font-size: var(--font-size-small);
-  color: var(--secondary-text);
   margin-top: 0.5rem;
 }
 
@@ -228,17 +226,15 @@ body {
 .featured-header h2 {
   font-size: 24px;
   font-weight: bold;
-  color: #333;
 }
 
 .view-all {
   text-decoration: none;
-  color: var(--primary-accent);
   font-weight: bold;
+  color: var(--primary-accent);
 }
 
 .view-all:hover {
-  color: var(--hover-primary-accent);
 }
 
 .featured-grid {
@@ -312,12 +308,10 @@ body {
 .section-header h2 {
   font-size: 24px;
   font-weight: var(--font-weight-bold);
-  color: var(--color-dark);
 }
 
 .section-header p {
   font-size: 18px;
-  color: #333;
   margin-top: 10px;
 }
 
@@ -382,13 +376,11 @@ body {
 
 .step > h3 {
   font-size: 18px;
-  color: var(--color-dark);
   font-weight: var(--font-weight-bold);
 }
 
 .step > p {
   font-size: var(--font-size-small);
-  color: #333;
   margin-top: 10px;
 }
 
@@ -401,9 +393,13 @@ body {
 }
 
 .discover-projects-container {
-  max-width: 90%;
+  max-width: 100%;
   margin: auto;
-  padding: 50px 20px;
+  padding: 50px 0px;
+}
+.campaign-categories{
+  background-color: #e9ebef;
+  padding: 50px;
 }
 
 .text-center {
@@ -414,12 +410,10 @@ body {
 .text-center h2 {
   font-size: 24px;
   font-weight: var(--font-weight-bold);
-  color: var(--color-dark);
 }
 
 .text-center p {
   font-size: 16px;
-  color: #333;
 }
 
 /* Grid Layout */
@@ -432,7 +426,7 @@ body {
 
 /* Category Boxes */
 .category-box {
-  background: white;
+  background: #fff;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
@@ -442,14 +436,12 @@ body {
 
 .category-box i {
   font-size: 30px;
-  color: var(--color-dark);
   margin-bottom: 10px;
 }
 
 .category-box h3 {
   font-size: 18px;
   font-weight: var(--font-weight-bold);
-  color: var(--background-color);
 }
 
 .category-box p {
@@ -472,7 +464,7 @@ body {
 }
 
 .story-box {
-  background: white;
+  background: #e9ebef;
   padding: 20px;
   border-radius: 10px;
   box-shadow: var(--box-shadow);
@@ -500,7 +492,6 @@ body {
 .story-header h3 {
   font-size: 16px;
   font-weight: var(--font-weight-bold);
-  color: var(--color-dark);
 }
 
 .story-header p {
@@ -626,7 +617,7 @@ body {
 
 /* FAQ Section */
 .faq-section {
-  background-color: var(--nav-background);
+  background-color: #e9ebef;
   padding: 60px 20px;
 }
 
@@ -646,12 +637,12 @@ body {
 .faq-header h2 {
   font-size: 24px;
   font-weight: bold;
-  color: #ffffff;
+  color: #000;
 }
 
 .faq-header p {
   font-size: 18px;
-  color: #ccc;
+  color: #333;
 }
 
 /* FAQ List */
@@ -686,13 +677,12 @@ body {
 /* Main Section */
 .phone-main-section {
   background-color: #f9fafb;
-  padding: 60px 20px;
 }
 
 /* Mobile App Section */
 .mobile-app-section {
   background-color: #f9fafb;
-  padding: 80px 20px;
+  padding: 80px 50px;
   border-radius: 16px;
   margin: 40px auto;
   max-width: 1400px;
@@ -814,7 +804,7 @@ body {
 /* Platform Stats Section */
 .platform-stats-section {
   text-align: center;
-  background-color: #f9fafb;
+  background-color: #e9ebef;
   padding: 60px 20px;
 }
 
@@ -843,6 +833,7 @@ body {
 .stats-box {
   padding: 20px;
   border-radius: 10px;
+  background-color: #fff;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
@@ -1173,7 +1164,7 @@ body {
   align-items: center;
   text-align: center;
   padding: 120px 20px;
-  background-color: #1f2937;
+  background-color: #e9ebef;
   /* background-image: linear-gradient(to right, #1f2937, #374151); */
 }
 
@@ -1185,14 +1176,14 @@ body {
 .cta-container h2 {
   font-size: 40px;
   font-weight: 700;
-  color: #ffffff;
+  color: #000;
   margin-bottom: 20px;
   line-height: 1.3;
 }
 
 .cta-container p {
   font-size: 18px;
-  color: #d1d5db;
+  color: #333;
   margin-bottom: 40px;
   line-height: 1.6;
 }
@@ -1227,7 +1218,7 @@ body {
 .cta-secondary {
   font-size: 18px;
   font-weight: 600;
-  color: #ffffff;
+  color: #333;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -1265,9 +1256,9 @@ body {
 /* Footer Styles */
 .footer {
   /* margin-top: 100px; */
-  background-color: #1f2937;
+  background-color: #e9ebef;
   padding: 80px 20px 20px 20px;
-  color: #ffffff;
+  color: #000;
 }
 
 .footer-container {
@@ -1284,7 +1275,7 @@ body {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 20px;
-  color: #ffffff;
+  color: #000;
 }
 
 .footer-column ul {
@@ -1298,7 +1289,7 @@ body {
 
 .footer-column ul li a {
   text-decoration: none;
-  color: #d1d5db;
+  color: #333;
   transition: color 0.3s ease;
 }
 
@@ -1315,7 +1306,7 @@ body {
 
 .footer-column p {
   font-size: 14px;
-  color: #d1d5db;
+  color: #333;
   line-height: 1.6;
 }
 
@@ -1330,9 +1321,9 @@ body {
   flex: 1;
   padding: 10px;
   border: 1px solid #d1d5db;
+  outline: none;
   border-radius: 8px;
   background-color: transparent;
-  color: #ffffff;
 }
 
 .newsletter-form input::placeholder {
@@ -1341,7 +1332,7 @@ body {
 
 .newsletter-form button {
   background-color: var(--primary-accent);
-  color: #ffffff;
+  color: #000;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
@@ -1363,13 +1354,13 @@ body {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  color: #d1d5db;
+  color: #333;
 }
 
 /* Social Links */
 .social-links a {
   text-decoration: none;
-  color: #d1d5db;
+  color: #333;
   font-size: 20px;
   margin-left: 15px;
   transition: color 0.3s ease;

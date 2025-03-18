@@ -1,8 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router";
 
 function Footer() {
+  const theme = useSelector((state) => state.theme);
   return (
-    <footer className="footer">
+    <footer
+      className="footer"
+      style={{
+        background: !theme && "#1f2937",
+      }}
+    >
       <div className="footer-container">
         <div className="footer-column">
           <img
@@ -10,55 +18,78 @@ function Footer() {
             src="/FundHive-logo.png"
             alt="Company Logo"
           />
-          <p>
+          <p
+            style={{
+              color: !theme && "#ccc",
+            }}
+          >
             Making dreams come true through collective support and innovative
             ideas.
           </p>
         </div>
 
         <div className="footer-column">
-          <h3>Company</h3>
+          <h3 style={{ color: !theme && "#fff" }}>Company</h3>
           <ul>
             <li>
-              <a href="#">About</a>
+              <Link style={{ color: !theme && "#ccc" }} to={"/about"}>
+                About
+              </Link>
             </li>
             <li>
-              <a href="#">Careers</a>
+              <Link style={{ color: !theme && "#ccc" }} to={"/careers"}>
+                Careers
+              </Link>
             </li>
             <li>
-              <a href="#">Press</a>
+              <Link style={{ color: !theme && "#ccc" }} to={"/press"}>
+                Press
+              </Link>
             </li>
             <li>
-              <a href="#">Impact</a>
+              <Link style={{ color: !theme && "#ccc" }} to={"/impact"}>
+                Impact
+              </Link>
             </li>
           </ul>
         </div>
 
         <div className="footer-column">
-          <h3>Support</h3>
+          <h3 style={{ color: !theme && "#fff" }}>Support</h3>
           <ul>
             <li>
-              <a href="#">Help Center</a>
+              <Link style={{ color: !theme && "#ccc" }} to={"/help-center"}>
+                Help Center
+              </Link>
             </li>
             <li>
-              <a href="#">Creator Resources</a>
+              <Link
+                style={{ color: !theme && "#ccc" }}
+                to={"/creator-resources"}
+              >
+                Creator Resources
+              </Link>
             </li>
             <li>
-              <a href="#">Guidelines</a>
+              <Link style={{ color: !theme && "#ccc" }} to={"/guidelines"}>
+                Guidelines
+              </Link>
             </li>
             <li>
-              <a href="#">Contact Us</a>
+              <Link style={{ color: !theme && "#ccc" }} to={"/contact-us"}>
+                Contact Us
+              </Link>
             </li>
           </ul>
         </div>
 
         <div className="footer-column">
-          <h3>Stay Updated</h3>
-          <p>
+          <h3 style={{ color: !theme && "#fff" }}>Stay Updated</h3>
+          <p style={{ color: !theme && "#ccc" }}>
             Subscribe to our newsletter for the latest updates and success
             stories.
           </p>
-          <form className="newsletter-form">
+          <form className="newsletter-form" style={{ color: !theme && "#000" }}>
             <input
               type="email"
               name="newsletter-email"
@@ -68,27 +99,40 @@ function Footer() {
               aria-required
               autoCapitalize="on"
               autoCorrect="on"
+              style={{ color: theme && "#000" }}
             />
             <button type="submit">Subscribe</button>
           </form>
         </div>
       </div>
 
-      <div className="footer-bottom">
+      <div className="footer-bottom" style={{ color: !theme && "#ccc" }}>
         <p>© 2024 CrowdFunding Platform. All rights reserved.</p>
         <div className="social-links">
-          <a href="#">
-            <i className="fab fa-facebook"></i>
-          </a>
-          <a href="#">
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a href="#">
-            <i className="fab fa-twitter"></i>
-          </a>
-          <a href="#">
-            <i className="fab fa-youtube"></i>
-          </a>
+          <Link to={"/"}>
+            <i
+              style={{ color: !theme && "#ccc" }}
+              className="fab fa-facebook"
+            ></i>
+          </Link>
+          <Link to={"/"}>
+            <i
+              style={{ color: !theme && "#ccc" }}
+              className="fab fa-instagram"
+            ></i>
+          </Link>
+          <Link to={"/"}>
+            <i
+              style={{ color: !theme && "#ccc" }}
+              className="fab fa-twitter"
+            ></i>
+          </Link>
+          <Link to={"/"}>
+            <i
+              style={{ color: !theme && "#ccc" }}
+              className="fab fa-youtube"
+            ></i>
+          </Link>
         </div>
       </div>
     </footer>
