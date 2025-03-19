@@ -1,0 +1,407 @@
+.campaign-details-main {
+    max-width: 1440px;
+    margin: 80px auto 0px auto;
+    padding: 0 16px;
+}
+
+.campaign-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.campaign-details-col-2 {
+    grid-column: span 2;
+}
+
+.campaign-details-col-1 {
+    grid-column: span 1;
+}
+
+/* Responsive Grid */
+@media (max-width: 1024px) {
+    .campaign-details-grid {
+        grid-template-columns: 1fr;
+    }
+    .campaign-details-col-2, .campaign-details-col-1 {
+        grid-column: span 1;
+    }
+}
+
+/* Card Styles */
+.campaign-details-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.campaign-details-image-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 24px;
+}
+
+.campaign-details-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.campaign-details-main-image {
+    width: 100%;
+    height: 384px;
+    object-fit: cover;
+    margin-top: 16px;
+}
+
+.campaign-details-content {
+    padding: 24px;
+}
+
+.campaign-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.campaign-details-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #111827;
+}
+
+.campaign-details-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.campaign-details-icon-button {
+    color: #6b7280;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.campaign-details-icon-button:hover {
+    color: #374151;
+}
+
+.campaign-details-progress-section {
+    margin-bottom: 24px;
+}
+
+.campaign-details-progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.campaign-details-progress-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.campaign-details-progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.campaign-details-progress-fill {
+    height: 100%;
+    background-color: #1f2937;
+    border-radius: 4px;
+}
+
+.campaign-details-progress-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.campaign-details-detail {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.campaign-details-donate-button {
+    width: 100%;
+    background-color: #1f2937;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 24px;
+}
+
+.campaign-details-donate-button:hover {
+    background-color: #1f2937;
+}
+
+.campaign-details-about-section {
+    max-width: none;
+}
+
+.campaign-details-subtitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.campaign-details-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 16px;
+}
+
+.campaign-details-list li {
+    margin-bottom: 8px;
+}
+
+/* Reward Section */
+.campaign-details-reward-section {
+    margin-top: 32px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.campaign-details-reward-content {
+    padding: 24px;
+}
+
+.campaign-details-reward-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 24px;
+}
+
+.campaign-details-reward-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    transition: border-color 0.3s;
+}
+
+.campaign-details-reward-card:hover {
+    border-color: #1f2937;
+}
+
+.campaign-details-reward-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.campaign-details-reward-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.campaign-details-reward-description {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.campaign-details-reward-button {
+    background-color: #1f2937;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.campaign-details-reward-button:hover {
+    background-color: #1f2937;
+}
+
+.campaign-details-reward-details {
+    font-size: 14px;
+    color: #374151;
+    margin-top: 16px;
+}
+
+/* Sidebar Styles */
+.campaign-details-sidebar {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    position: sticky;
+    top: 24px;
+}
+
+.campaign-details-sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.campaign-details-creator-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.campaign-details-creator-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.campaign-details-creator-details {
+    margin-left: 12px;
+}
+
+.campaign-details-creator-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.campaign-details-creator-role {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.campaign-details-statistics-section {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 24px;
+}
+
+.campaign-details-statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.campaign-details-statistic {
+    text-align: center;
+}
+
+.campaign-details-statistic-label {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.campaign-details-statistic-value {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.campaign-details-supporters-section {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 24px;
+}
+
+.campaign-details-supporters-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.campaign-details-supporter {
+    display: flex;
+    align-items: center;
+}
+
+.campaign-details-supporter-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.campaign-details-supporter-details {
+    margin-left: 12px;
+}
+
+.campaign-details-supporter-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.campaign-details-supporter-info {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.campaign-details-share-section {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 24px;
+}
+
+.campaign-details-share-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.campaign-details-share-button {
+    flex: 1;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.campaign-details-share-button i{
+    margin-right: 10px;
+}
+
+.campaign-details-share-button.twitter {
+    background-color: #1f2937;
+    color: white;
+}
+
+.campaign-details-share-button.facebook {
+    background-color: #1f2937;
+    color: white;
+}
+
+.campaign-details-share-button:hover {
+    opacity: 0.9;
+}
+
+.campaign-details-updates-section {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 24px;
+}
+
+.campaign-details-updates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.campaign-details-update {
+    border-left: 4px solid #1f2937;
+    padding-left: 16px;
+}
+
+.campaign-details-update-title {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.campaign-details-update-date {
+    font-size: 12px;
+    color: #6b7280;
+}
