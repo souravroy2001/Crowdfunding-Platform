@@ -9,6 +9,7 @@ import PreviewStep from "./CreateCampaign/PreviewStep";
 import Sidebar from "./CreateCampaign/Sidebar";
 import Header from "./CreateCampaign/Header";
 import Footer from "./CreateCampaign/Footer";
+import { useSelector } from "react-redux";
 
 const steps = [
   {
@@ -60,7 +61,7 @@ function CreateCampaign() {
   const methods = useForm({
     defaultValues,
   });
-
+  const theme = useSelector((state) => state.theme.darkMode);
   const [currentStepId, setCurrentStepId] = useState(steps[0].id);
   const currentStepIndex = steps.findIndex((step) => step.id === currentStepId);
   const currentStep = steps[currentStepIndex];

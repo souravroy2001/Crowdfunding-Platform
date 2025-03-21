@@ -120,6 +120,7 @@ const initialState = {
       daysLeft: 18,
       status: "Active",
       createdAt: Date.now() - 12 * 24 * 60 * 60 * 1000,
+      featured: true,
     },
     {
       id: 10,
@@ -160,6 +161,7 @@ const initialState = {
       daysLeft: 0,
       status: "Coming Soon",
       createdAt: Date.now(),
+      featured: true,
     },
     {
       id: 13,
@@ -173,6 +175,7 @@ const initialState = {
       daysLeft: 0,
       status: "Coming Soon",
       createdAt: Date.now(),
+      featured: true,
     },
     // Ended Projects
     {

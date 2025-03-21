@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../style/registration.css";
 import { Link } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Registration() {
   const [activeTab, setActiveTab] = useState("signup");
@@ -9,6 +9,7 @@ function Registration() {
   const [passwordStrength, setPasswordStrength] = useState("normal");
   const [emailValid, setEmailValid] = useState(true);
   const dispatch = useDispatch();
+  const theme = useSelector((state) => state.theme.darkMode);
 
   // State for user, admin, and company forms
   const [userData, setUserData] = useState({

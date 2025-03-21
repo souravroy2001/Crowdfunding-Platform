@@ -1,7 +1,9 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 function BasicDetailsStep() {
+  const theme = useSelector((state) => state.theme.darkMode);
   const {
     register,
     watch,

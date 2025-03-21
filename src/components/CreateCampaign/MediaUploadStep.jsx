@@ -1,10 +1,12 @@
 import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
+import { useSelector } from "react-redux";
 
 function MediaUploadStep() {
   const { setValue, watch } = useFormContext();
   const media = watch("media");
+  const theme = useSelector((state) => state.theme.darkMode);
 
   const onDrop = useCallback(
     (acceptedFiles) => {

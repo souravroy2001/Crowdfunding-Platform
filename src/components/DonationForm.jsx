@@ -10,7 +10,7 @@ const DonationForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const theme = useSelector((state) => state.toggleTheme);
+    const theme = useSelector((state) => state.theme.darkMode);
   const [donationAmount, setDonationAmount] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [localProject, setLocalProject] = useState(location.state?.project);
@@ -29,7 +29,7 @@ const DonationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const amount = Number(donationAmount);
-    
+
     if (!amount || amount <= 0) {
       toast.error("Please enter a valid donation amount ");
       return;
@@ -69,7 +69,7 @@ const DonationForm = () => {
 
       // Show success message
       toast.success(`Thank you for donating $${amount.toLocaleString()}! `);
-      
+
       // Navigate back to browse projects after delay
       setTimeout(() => {
         navigate("/browse-projects");
@@ -157,7 +157,7 @@ const DonationForm = () => {
                   </p>
                 </div>
               </div>
-              
+
               {/* Progress Bar */}
               <div className="h-3 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
                 <div

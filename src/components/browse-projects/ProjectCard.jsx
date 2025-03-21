@@ -1,47 +1,65 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useMemo, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const ProjectCard = ({ project, isFavorite, onToggleFavorite }) => {
   const navigate = useNavigate();
-  const theme = useSelector((state) => state.toggleTheme);
-  // Get updated project data from Redux store
+  const theme = useSelector((state) => state.theme.darkMode);
   const projects = useSelector((state) => state.projects.projects);
-  const updatedProject = projects.find(p => p.id === project.id) || project;
 
-  // Calculate campaign status and its color
-  let status = "Active";
-  let statusColor = "bg-green-500";
+  // Get updated project data from Redux store
+  const updatedProject = useMemo(
+    () => projects.find((p) => p.id === project.id) || project,
+    [projects, project.id]
+  );
 
-  if (updatedProject.daysLeft < 0) {
-    status = "Ended";
-    statusColor = "bg-red-500";
-  } else if (updatedProject.daysLeft > 30) {
-    status = "Coming Soon";
-    statusColor = "bg-blue-500";
-  }
+  // Determine project status
+  const { status, statusColor } = useMemo(() => {
+    if (updatedProject.daysLeft < 0)
+      return { status: "Ended", statusColor: "bg-red-500" };
+    if (updatedProject.daysLeft > 30)
+      return { status: "Coming Soon", statusColor: "bg-blue-500" };
+    return { status: "Active", statusColor: "bg-green-500" };
+  }, [updatedProject.daysLeft]);
 
+  // Calculate donation progress
   const progressPercentage = Math.min(
     (updatedProject.raised / updatedProject.goal) * 100,
     100
   );
 
-  const handleDonateClick = (e) => {
-    e.preventDefault();
-    if (updatedProject.daysLeft > 0) {
-      navigate(`/donate/${updatedProject.id}`, { state: { project: updatedProject } });
-    }
-  };
+  // Handle donate button click
+  const handleDonateClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (updatedProject.daysLeft > 0) {
+        navigate(`/donate/${updatedProject.id}`, {
+          state: { project: updatedProject },
+        });
+      }
+    },
+    [navigate, updatedProject]
+  );
+
+  // Handle favorite toggle
+  const handleToggleFavorite = useCallback(
+    (e) => {
+      e.stopPropagation(); // Prevent event bubbling
+      onToggleFavorite(updatedProject.id);
+    },
+    [onToggleFavorite, updatedProject.id]
+  );
 
   return (
     <div
-      className={`rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-105 ${
+      className={`rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-101 h-full min-h-[350px] flex flex-col ${
         theme
           ? "bg-white shadow-lg hover:shadow-xl"
           : "bg-gray-800 shadow-gray-700/50 hover:shadow-gray-600/50"
       }`}
     >
+      {/* Image Section */}
       <div className="relative">
         <img
           src={updatedProject.image}
@@ -56,7 +74,7 @@ const ProjectCard = ({ project, isFavorite, onToggleFavorite }) => {
           </span>
         </div>
         <button
-          onClick={() => onToggleFavorite(updatedProject.id)}
+          onClick={handleToggleFavorite}
           className="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white transition-colors duration-300"
         >
           {isFavorite ? (
@@ -67,20 +85,24 @@ const ProjectCard = ({ project, isFavorite, onToggleFavorite }) => {
         </button>
       </div>
 
-      <div className="p-4">
-        <div className="flex justify-between items-start mb-2">
+      {/* Content Section */}
+      <div className="p-4 flex flex-col flex-grow">
+        <div className="flex flex-wrap justify-between items-start mb-2 gap-2 sm:gap-4">
           <h3
-            className={`text-xl font-semibold ${
+            className={`text-xl font-semibold truncate max-w-[70%] ${
               theme ? "text-gray-900" : "text-white"
             }`}
           >
-            {updatedProject.title}
+            <Link to={`/campaign/${updatedProject.id}`}>
+              {" "}
+              {updatedProject.title}
+            </Link>
           </h3>
           <span
-            className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-3 ${
+            className={`inline-block px-4 py-1.5 rounded-lg text-sm font-medium shadow-sm ${
               theme
-                ? "bg-primary-100 text-primary-800"
-                : "bg-primary-900/20 text-primary-300"
+                ? "bg-pink-200 text-pink-900"
+                : "bg-blue-800/50 text-blue-300"
             }`}
           >
             {updatedProject.category}
@@ -88,14 +110,17 @@ const ProjectCard = ({ project, isFavorite, onToggleFavorite }) => {
         </div>
 
         <p
-          className={`text-sm mb-4 ${
+          className={`text-sm mb-4 flex-grow ${
             theme ? "text-gray-600" : "text-gray-400"
           }`}
         >
+          <Link to={`/campaign/${updatedProject.id}`}>
+            {" "}
           {updatedProject.description}
+          </Link>
         </p>
 
-        {/* Progress bar */}
+        {/* Progress Bar */}
         <div className="w-full h-2 bg-gray-200 rounded-full mb-3">
           <div
             className="h-full bg-[#00bfa5] rounded-full transition-all duration-500"
@@ -103,9 +128,12 @@ const ProjectCard = ({ project, isFavorite, onToggleFavorite }) => {
           />
         </div>
 
+        {/* Raised & Goal Section */}
         <div className="flex justify-between items-center mb-4">
           <div>
-            <p className={`text-sm ${theme ? "text-gray-600" : "text-gray-400"}`}>
+            <p
+              className={`text-sm ${theme ? "text-gray-600" : "text-gray-400"}`}
+            >
               Raised
             </p>
             <p
@@ -117,7 +145,9 @@ const ProjectCard = ({ project, isFavorite, onToggleFavorite }) => {
             </p>
           </div>
           <div>
-            <p className={`text-sm ${theme ? "text-gray-600" : "text-gray-400"}`}>
+            <p
+              className={`text-sm ${theme ? "text-gray-600" : "text-gray-400"}`}
+            >
               Goal
             </p>
             <p
@@ -130,7 +160,8 @@ const ProjectCard = ({ project, isFavorite, onToggleFavorite }) => {
           </div>
         </div>
 
-        <div className="mt-4 flex justify-between items-center">
+        {/* Bottom Section */}
+        <div className="mt-auto flex justify-between items-center">
           <span
             className={`text-sm ${theme ? "text-gray-600" : "text-gray-400"}`}
           >
@@ -140,14 +171,22 @@ const ProjectCard = ({ project, isFavorite, onToggleFavorite }) => {
           </span>
           <button
             onClick={handleDonateClick}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors duration-300 ${
-              updatedProject.daysLeft > 0 && updatedProject.raised < updatedProject.goal
-                ? "bg-[#00bfa5] hover:bg-[#009688] text-white"
-                : "bg-gray-400 cursor-not-allowed text-white"
+            className={`px-4 py-2 cursor-pointer rounded-lg whitespace-nowrap font-medium transition-colors duration-300 ${
+              updatedProject.raised >= updatedProject.goal ||
+              updatedProject.daysLeft <= 0
+                ? "bg-gray-400 cursor-not-allowed text-white"
+                : "bg-[#00bfa5] hover:bg-[#009688] text-white"
             }`}
-            disabled={updatedProject.raised >= updatedProject.goal || updatedProject.daysLeft <= 0}
+            disabled={
+              updatedProject.raised >= updatedProject.goal ||
+              updatedProject.daysLeft <= 0
+            }
           >
-            {updatedProject.raised >= updatedProject.goal ? "Goal Reached!" : updatedProject.daysLeft > 0 ? "Donate Now" : "Ended"}
+            {updatedProject.raised >= updatedProject.goal
+              ? "Goal Reached!"
+              : updatedProject.daysLeft > 0
+              ? "Donate Now"
+              : "Ended"}
           </button>
         </div>
       </div>

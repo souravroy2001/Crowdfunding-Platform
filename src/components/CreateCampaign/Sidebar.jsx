@@ -1,6 +1,8 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 function Sidebar({ steps, currentStep, onStepClick }) {
+  const theme = useSelector((state) => state.theme.darkMode);
   return (
     <aside className="w-72 bg-white border-r border-gray-200 hidden lg:block">
       <div className="p-6">

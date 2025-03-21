@@ -1,6 +1,8 @@
-import React from 'react';
+import React from "react";
+import { useSelector } from "react-redux";
 
 function Footer({ onPrevious, onNext, isFirstStep, isLastStep }) {
+  const theme = useSelector((state) => state.theme.darkMode);
   return (
     <footer className="bg-white border-t border-gray-200">
       <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">

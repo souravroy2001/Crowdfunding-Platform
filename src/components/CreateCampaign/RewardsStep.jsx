@@ -1,9 +1,11 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 function RewardsStep() {
   const { setValue, watch } = useFormContext();
   const rewards = watch("rewards");
+  const theme = useSelector((state) => state.theme.darkMode);
 
   const addReward = () => {
     const newReward = {

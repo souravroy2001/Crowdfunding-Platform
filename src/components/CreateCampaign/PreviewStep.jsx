@@ -1,9 +1,11 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 function PreviewStep() {
   const { watch } = useFormContext();
   const formData = watch();
+  const theme = useSelector((state) => state.theme.darkMode);
 
   return (
     <div className="space-y-8">

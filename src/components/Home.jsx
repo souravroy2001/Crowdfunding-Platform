@@ -18,16 +18,8 @@ import {
   faqData,
 } from "../data/homeData";
 
-// const heroBeforeStyle = {
-//   content: '""',
-//   position: "absolute",
-//   inset: 0,
-//   background: 'url("/head-main-image.jpg") no-repeat center center/cover',
-//   opacity: 0.3,
-// };
-
 function Home() {
-  const theme = useSelector((state) => state.toggleTheme);
+  const theme = useSelector((state) => state.theme.darkMode);
 
   return (
     <main
@@ -72,7 +64,7 @@ function Home() {
                 <Link
                   key={index}
                   to={button.link}
-                  className={`inline-flex items-center justify-center px-8 py-3.5 text-base font-medium rounded-lg transition-all duration-300 w-full sm:w-auto hover:scale-105 ${
+                  className={`inline-flex items-center justify-center px-8 py-3.5 text-base font-medium rounded-lg transition-all duration-300 w-full sm:w-auto hover:scale-101 ${
                     button.primary
                       ? theme
                         ? "bg-[#1f2937] text-white hover:bg-[#1f2937]/90 shadow-lg hover:shadow-[#1f2937]/30"
@@ -179,23 +171,25 @@ function Home() {
         </div>
         <div className="featured-grid">
           {featuredProjects?.map((project, index) => (
-            <div className="project-card" key={index}>
-              <img src={project.image} alt={project.title} />
-              <div className="card-content">
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <div className="progress-bar">
-                  <div
-                    className="progress"
-                    style={{ width: `${project.funded}%` }}
-                  ></div>
-                </div>
-                <div className="funding-info">
-                  <span>${project.amount.toLocaleString()}</span>
-                  <span>{project.funded}% funded</span>
+            <Link to={`/campaign/${index}`}>
+              <div className="project-card" key={index}>
+                <img src={project.image} alt={project.title} />
+                <div className="card-content">
+                  <h3>{project.title}</h3>
+                  <p>{project.description}</p>
+                  <div className="progress-bar">
+                    <div
+                      className="progress"
+                      style={{ width: `${project.funded}%` }}
+                    ></div>
+                  </div>
+                  <div className="funding-info">
+                    <span>${project.amount.toLocaleString()}</span>
+                    <span>{project.funded}% funded</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -247,7 +241,7 @@ function Home() {
               {campaignCategories.subtitle}
             </p>
             <Link
-              to="/explore"
+              to="/browse-projects"
               className={`inline-flex items-center mt-4 text-base font-medium transition-all duration-300 hover:translate-x-1 ${
                 theme
                   ? "text-[#00bfa5] hover:text-[#009688]"
@@ -273,15 +267,15 @@ function Home() {
             {campaignCategories.categories.map((category, index) => (
               <Link
                 key={index}
-                to={`/explore?category=${category.title.toLowerCase()}`}
-                className={`category-box p-6 rounded-xl transition-all duration-300 transform hover:scale-105 group ${
+                to={"/browse-projects"}
+                className={`category-box p-6 rounded-xl transition-all duration-300 transform hover:scale-101 group ${
                   theme
                     ? "bg-white shadow-lg hover:shadow-xl"
                     : "bg-gray-800 shadow-lg hover:shadow-gray-700/50"
                 }`}
               >
                 <div
-                  className={`mb-4 text-3xl transition-transform duration-300 group-hover:scale-110 ${
+                  className={`mb-4 text-3xl transition-transform duration-300 group-hover:scale-103 ${
                     category.color === "primary"
                       ? theme
                         ? "text-[#00bfa5]"
@@ -343,7 +337,7 @@ function Home() {
           {successStories.stories.map((story, index) => (
             <div
               key={index}
-              className={`story-box rounded-xl p-6 transition-all duration-300 transform hover:scale-105 ${
+              className={`story-box rounded-xl p-6 transition-all duration-300 transform hover:scale-101 ${
                 theme
                   ? "bg-white shadow-lg hover:shadow-xl"
                   : "bg-gray-800 shadow-lg hover:shadow-gray-700/50"
@@ -446,7 +440,7 @@ function Home() {
             {videoTestimonialsData.testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className={`rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105 ${
+                className={`rounded-xl overflow-hidden transition-all duration-300 ${
                   theme
                     ? "bg-white shadow-lg hover:shadow-xl"
                     : "bg-gray-800 shadow-lg hover:shadow-gray-700/50"
@@ -503,7 +497,7 @@ function Home() {
               {pricingPlansData.plans.map((plan) => (
                 <div
                   key={plan.title}
-                  className={`rounded-xl p-8 transition-all duration-300 transform hover:scale-105 ${
+                  className={`rounded-xl p-8 transition-all duration-300 transform hover:scale-101 ${
                     theme
                       ? `bg-white shadow-lg hover:shadow-xl ${
                           plan.featured ? "ring-2 ring-[#1f2937]" : ""
@@ -601,7 +595,7 @@ function Home() {
             {newsUpdatesData.news.map((item, index) => (
               <div
                 key={index}
-                className={`rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105 ${
+                className={`rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-101 ${
                   theme
                     ? "bg-white shadow-lg hover:shadow-xl"
                     : "bg-gray-800 shadow-lg hover:shadow-gray-700/50"

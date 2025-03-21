@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import "../style/login.css";
 import { Link } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Login() {
   const [activeTab, setActiveTab] = useState("signin");
   const [showPassword, setShowPassword] = useState(false);
+  const theme = useSelector((state) => state.theme.darkMode);
   const dispatch = useDispatch();
 
   // State for user, admin, and company forms

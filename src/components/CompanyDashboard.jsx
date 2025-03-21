@@ -41,21 +41,29 @@ const defaultData = {
 };
 
 const CompanyDashboard = () => {
-  const theme = useSelector((state) => state.toggleTheme);
+  const theme = useSelector((state) => state.theme.darkMode);
 
   return (
-    <div className={`min-h-screen ${theme ? "bg-gray-50" : "bg-gray-900"}`}>
+    <div className={`min-h-screen mt-[20px] ${theme ? "bg-gray-50" : "bg-gray-900"}`}>
       <CompanyNavbar />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
         <div className="space-y-8">
           {/* Header Section */}
           <CompanyHeader {...defaultData} />
 
           {/* Metrics Grid */}
-          <div className={`rounded-xl ${theme ? "bg-white" : "bg-gray-800"} shadow-sm overflow-hidden`}>
+          <div
+            className={`rounded-xl ${
+              theme ? "bg-white" : "bg-gray-800"
+            } shadow-sm overflow-hidden`}
+          >
             <div className="p-6">
-              <h2 className={`text-lg font-semibold ${theme ? "text-gray-900" : "text-white"}`}>
+              <h2
+                className={`text-lg font-semibold ${
+                  theme ? "text-gray-900" : "text-white"
+                }`}
+              >
                 Campaign Overview
               </h2>
               <div className="mt-4">

@@ -25,12 +25,12 @@ export const heroData = {
     buttons: [
         {
             text: "Start a Campaign",
-            link: "/start-campaign",
+            link: "/create-campaign",
             primary: true
         },
         {
             text: "Explore Projects",
-            link: "/explore",
+            link: "/browse-projects",
             primary: false
         }
     ]

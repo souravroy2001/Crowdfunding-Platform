@@ -7,7 +7,7 @@ import { toggleTheme } from "../redux/features/themeSlice";
 
 function Navbar() {
   const [isActive, setIsActive] = useState(false);
-  const theme = useSelector((state) => state.toggleTheme);
+  const theme = useSelector((state) => state.theme.darkMode);
   const dispatch = useDispatch();
 
   return (

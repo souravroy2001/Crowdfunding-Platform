@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const DonationSummary = () => {
-  const theme = useSelector((state) => state.theme);
+    const theme = useSelector((state) => state.theme.darkMode);
 
   const summary = {
     monthlyTotal: 2500,
@@ -22,7 +22,7 @@ const DonationSummary = () => {
         date: "2025-03-20",
         donor: {
           name: "Sarah Johnson",
-          avatar: "https://i.pravatar.cc/40?img=1", // Random avatar
+          avatar: "https://i.pravatar.cc/40?img=1"
         },
       },
       {
@@ -32,7 +32,7 @@ const DonationSummary = () => {
         date: "2025-03-18",
         donor: {
           name: "Mike Chen",
-          avatar: "https://i.pravatar.cc/40?img=2", // Random avatar
+          avatar: "https://i.pravatar.cc/40?img=2",
         },
       },
       {
@@ -42,7 +42,7 @@ const DonationSummary = () => {
         date: "2025-03-15",
         donor: {
           name: "Emma Wilson",
-          avatar: "https://i.pravatar.cc/40?img=3", // Random avatar
+          avatar: "https://i.pravatar.cc/40?img=3",
         },
       },
     ],

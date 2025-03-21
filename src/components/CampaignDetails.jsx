@@ -1,7 +1,9 @@
 import React from "react";
 import "../style/campaignDetails.css";
+import { useSelector } from "react-redux";
 
 const CampaignDetails = () => {
+  const theme = useSelector((state) => state.theme.darkMode);
   return (
     <main className="campaign-details-main">
       <div className="campaign-details-grid">
@@ -59,7 +61,7 @@ const CampaignDetails = () => {
                 <div className="campaign-details-progress-bar">
                   <div
                     className="campaign-details-progress-fill"
-                    style={{width: "75%"}}
+                    style={{ width: "75%" }}
                   ></div>
                 </div>
                 <div className="campaign-details-progress-details">
@@ -71,9 +73,13 @@ const CampaignDetails = () => {
                   </div>
                 </div>
               </div>
-              <button className="campaign-details-donate-button">Donate Now</button>
+              <button className="campaign-details-donate-button">
+                Donate Now
+              </button>
               <div className="campaign-details-about-section">
-                <h2 className="campaign-details-subtitle">About This Campaign</h2>
+                <h2 className="campaign-details-subtitle">
+                  About This Campaign
+                </h2>
                 <p>
                   Join us in our mission to protect and preserve our ocean
                   ecosystems. Your support will help fund critical marine
@@ -117,7 +123,9 @@ const CampaignDetails = () => {
                       Pledge $25 or more
                     </p>
                   </div>
-                  <button className="campaign-details-reward-button">Select</button>
+                  <button className="campaign-details-reward-button">
+                    Select
+                  </button>
                   <p className="campaign-details-reward-details">
                     Receive a digital certificate and monthly updates about our
                     conservation efforts.
@@ -132,7 +140,9 @@ const CampaignDetails = () => {
                       Pledge $100 or more
                     </p>
                   </div>
-                  <button className="campaign-details-reward-button">Select</button>
+                  <button className="campaign-details-reward-button">
+                    Select
+                  </button>
                   <p className="campaign-details-reward-details">
                     Get a personalized thank you video and your name featured on
                     our website.
@@ -147,7 +157,9 @@ const CampaignDetails = () => {
                       Pledge $250 or more
                     </p>
                   </div>
-                  <button className="campaign-details-reward-button">Select</button>
+                  <button className="campaign-details-reward-button">
+                    Select
+                  </button>
                   <p className="campaign-details-reward-details">
                     Receive an exclusive marine life photo book and quarterly
                     video calls with our marine biologists.
@@ -162,7 +174,9 @@ const CampaignDetails = () => {
                       Pledge $500 or more
                     </p>
                   </div>
-                  <button className="campaign-details-reward-button">Select</button>
+                  <button className="campaign-details-reward-button">
+                    Select
+                  </button>
                   <p className="campaign-details-reward-details">
                     Join a virtual diving expedition and receive a limited
                     edition ocean conservation artwork.
@@ -182,8 +196,12 @@ const CampaignDetails = () => {
                 alt="Creator"
               />
               <div className="campaign-details-creator-details">
-                <h3 className="campaign-details-creator-name">Dr. Sarah Johnson</h3>
-                <p className="campaign-details-creator-role">Marine Biologist</p>
+                <h3 className="campaign-details-creator-name">
+                  Dr. Sarah Johnson
+                </h3>
+                <p className="campaign-details-creator-role">
+                  Marine Biologist
+                </p>
               </div>
             </div>
             <div className="campaign-details-statistics-section">
@@ -192,7 +210,9 @@ const CampaignDetails = () => {
               </h2>
               <div className="campaign-details-statistics-grid">
                 <div className="campaign-details-statistic">
-                  <p className="campaign-details-statistic-label">Total Backers</p>
+                  <p className="campaign-details-statistic-label">
+                    Total Backers
+                  </p>
                   <p className="campaign-details-statistic-value">1,234</p>
                 </div>
                 <div className="campaign-details-statistic">
@@ -208,13 +228,17 @@ const CampaignDetails = () => {
                   <p className="campaign-details-statistic-value">45 days</p>
                 </div>
                 <div className="campaign-details-statistic">
-                  <p className="campaign-details-statistic-label">Success Rate</p>
+                  <p className="campaign-details-statistic-label">
+                    Success Rate
+                  </p>
                   <p className="campaign-details-statistic-value">75%</p>
                 </div>
               </div>
             </div>
             <div className="campaign-details-supporters-section">
-              <h2 className="campaign-details-sidebar-title">Recent Supporters</h2>
+              <h2 className="campaign-details-sidebar-title">
+                Recent Supporters
+              </h2>
               <div className="campaign-details-supporters-list">
                 <div className="campaign-details-supporter">
                   <img
@@ -223,7 +247,9 @@ const CampaignDetails = () => {
                     alt="Supporter"
                   />
                   <div className="campaign-details-supporter-details">
-                    <p className="campaign-details-supporter-name">Michael Chen</p>
+                    <p className="campaign-details-supporter-name">
+                      Michael Chen
+                    </p>
                     <p className="campaign-details-supporter-info">
                       Donated $50 • 2 hours ago
                     </p>
@@ -236,7 +262,9 @@ const CampaignDetails = () => {
                     alt="Supporter"
                   />
                   <div className="campaign-details-supporter-details">
-                    <p className="campaign-details-supporter-name">Robert Smith</p>
+                    <p className="campaign-details-supporter-name">
+                      Robert Smith
+                    </p>
                     <p className="campaign-details-supporter-info">
                       Donated $75 • 6 hours ago
                     </p>
@@ -249,7 +277,9 @@ const CampaignDetails = () => {
                     alt="Supporter"
                   />
                   <div className="campaign-details-supporter-details">
-                    <p className="campaign-details-supporter-name">Lisa Anderson</p>
+                    <p className="campaign-details-supporter-name">
+                      Lisa Anderson
+                    </p>
                     <p className="campaign-details-supporter-info">
                       Donated $200 • 8 hours ago
                     </p>
@@ -262,7 +292,9 @@ const CampaignDetails = () => {
                     alt="Supporter"
                   />
                   <div className="campaign-details-supporter-details">
-                    <p className="campaign-details-supporter-name">Emma Watson</p>
+                    <p className="campaign-details-supporter-name">
+                      Emma Watson
+                    </p>
                     <p className="campaign-details-supporter-info">
                       Donated $100 • 5 hours ago
                     </p>
@@ -282,19 +314,25 @@ const CampaignDetails = () => {
               </div>
             </div>
             <div className="campaign-details-updates-section">
-              <h2 className="campaign-details-sidebar-title">Campaign Updates</h2>
+              <h2 className="campaign-details-sidebar-title">
+                Campaign Updates
+              </h2>
               <div className="campaign-details-updates-list">
                 <div className="campaign-details-update">
                   <p className="campaign-details-update-title">
                     New Coral Reef Site Selected
                   </p>
-                  <p className="campaign-details-update-date">Posted 3 days ago</p>
+                  <p className="campaign-details-update-date">
+                    Posted 3 days ago
+                  </p>
                 </div>
                 <div className="campaign-details-update">
                   <p className="campaign-details-update-title">
                     Monthly Progress Report
                   </p>
-                  <p className="campaign-details-update-date">Posted 1 week ago</p>
+                  <p className="campaign-details-update-date">
+                    Posted 1 week ago
+                  </p>
                 </div>
               </div>
             </div>

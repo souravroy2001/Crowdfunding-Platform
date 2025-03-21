@@ -35,7 +35,7 @@ const NotificationIcon = ({ type }) => {
 };
 
 const Notifications = () => {
-  const theme = useSelector((state) => state.toggleTheme);
+    const theme = useSelector((state) => state.theme.darkMode);
   const { notifications } = useSelector((state) => state.notifications);
   const dispatch = useDispatch();
 

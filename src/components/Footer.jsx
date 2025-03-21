@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router";
 
 function Footer() {
-  const theme = useSelector((state) => state.toggleTheme);
+  const theme = useSelector((state) => state.theme.darkMode);
   return (
     <footer
       className="footer"

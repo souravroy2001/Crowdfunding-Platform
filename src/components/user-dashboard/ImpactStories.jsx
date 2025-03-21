@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const ImpactStories = () => {
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.theme.darkMode);
 
   const stories = [
     {
