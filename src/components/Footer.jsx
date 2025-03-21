@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router";
 
 function Footer() {
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.toggleTheme);
   return (
     <footer
       className="footer"
@@ -107,7 +107,7 @@ function Footer() {
       </div>
 
       <div className="footer-bottom" style={{ color: !theme && "#ccc" }}>
-        <p>© 2024 CrowdFunding Platform. All rights reserved.</p>
+        <p> 2024 CrowdFunding Platform. All rights reserved.</p>
         <div className="social-links">
           <Link to={"/"}>
             <i

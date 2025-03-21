@@ -3,11 +3,11 @@ import { Link, NavLink } from "react-router";
 import { LuCloudMoon } from "react-icons/lu";
 import { LuCloudSun } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleTheme } from "../middleware/action/themeAction";
+import { toggleTheme } from "../redux/features/themeSlice";
 
 function Navbar() {
   const [isActive, setIsActive] = useState(false);
-  const theme = useSelector((state) => state.theme);
+  const theme = useSelector((state) => state.toggleTheme);
   const dispatch = useDispatch();
 
   return (
