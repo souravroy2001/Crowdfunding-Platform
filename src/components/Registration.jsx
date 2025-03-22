@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../style/registration.css";
 import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import bcrypt from "bcryptjs";
 
 function Registration() {
   const [activeTab, setActiveTab] = useState("signup");
@@ -111,9 +112,27 @@ function Registration() {
     });
   };
 
-  function handleUserSubmit(event) {
+  async function hashPassword(password) {
+    const saltRounds = 12;
+    return await bcrypt.hash(password, saltRounds);
+  }
+
+  async function handleUserSubmit(event) {
     event.preventDefault();
-    console.log(userData);
+
+    const hashedPassword = await hashPassword(userData.password);
+    const hashedConfirmPassword = await hashPassword(userData.confirmPassword);
+
+    localStorage.setItem("userData", JSON.stringify(hashedPassword));
+
+    const newUserData = {
+      ...userData,
+      password: hashedPassword,
+      confirmPassword: hashedConfirmPassword,
+    };
+
+    console.log(newUserData); // Do not log passwords in production!
+
     setUserData({
       fullName: "",
       email: "",
@@ -121,6 +140,7 @@ function Registration() {
       password: "",
       confirmPassword: "",
       rememberMe: false,
+      role: "user",
     });
   }
 
@@ -132,14 +152,18 @@ function Registration() {
     );
   }
 
-  function handleAdminSubmit(event) {
+  async function handleAdminSubmit(event) {
     event.preventDefault();
 
+    const hashedPassword = await hashPassword(adminData.password);
     const adminId = generateAdminId(adminData.emailOrUsername);
+
+    localStorage.setItem("adminData", JSON.stringify(hashedPassword));
 
     const newAdminData = {
       ...adminData,
       adminId,
+      password: hashedPassword,
     };
 
     console.log(newAdminData);
@@ -148,6 +172,7 @@ function Registration() {
       emailOrUsername: "",
       password: "",
       verificationCode: "",
+      role: "admin",
     });
   }
 
@@ -156,17 +181,21 @@ function Registration() {
     return companyName.substring(0, 3).toUpperCase() + randomPart;
   }
 
-  function handleCompanySubmit(event) {
+  async function handleCompanySubmit(event) {
     event.preventDefault();
 
+    const hashedPassword = await hashPassword(companyData.password);
     const companyCode = generateCompanyCode(
       companyData.companyName,
       companyData.businessRegistrationNumber
     );
 
+    localStorage.setItem("companyData", JSON.stringify(hashedPassword));
+
     const newCompanyData = {
       ...companyData,
       companyCode,
+      password: hashedPassword,
     };
 
     console.log(newCompanyData);
@@ -180,6 +209,7 @@ function Registration() {
       password: "",
       confirmPassword: "",
       rememberMe: false,
+      role: "company",
     });
   }
 
@@ -217,13 +247,13 @@ function Registration() {
       <div className="registration-form-section">
         <div className="registration-form-container">
           {/* Logo Section */}
-          <div className="registration-logo-section">
+          <div className="flex flex-col items-center justify-center text-center space-y-4">
             <img
               src="/FundHive-logo.png"
               alt="FundHive Logo"
-              className="registration-logo"
+              className="w-[120px]"
             />
-            <h1 className="registration-form-title">Sign up to your account</h1>
+            <h1 className="text-2xl font-semibold">Sign up to your account</h1>
           </div>
 
           {/* Tab Section */}
@@ -518,6 +548,13 @@ function Registration() {
             <button type="submit" className="registration-submit-button">
               Admin Login
             </button>
+
+            <p className="registration-signup-text">
+              Already with us?
+              <Link to={"/sign-in"} className="registration-signup-link">
+                Log In
+              </Link>
+            </p>
           </form>
 
           {/* Company Registration Form */}
@@ -675,6 +712,12 @@ function Registration() {
             <button type="submit" className="registration-submit-button">
               Register My Company
             </button>
+            <p className="registration-signup-text">
+              Already with us?
+              <Link to={"/sign-in"} className="registration-signup-link">
+                Log In
+              </Link>
+            </p>
           </form>
         </div>
       </div>

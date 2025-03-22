@@ -56,10 +56,8 @@ function App() {
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/notifications" element={<NotificationsPage />} />
 
-        <Route path="/company" element={<CompanyLayout />}>
-          <Route path="create-campaign" element={<CreateCampaign />} />
-        </Route>
-        <Route path="create-campaign" element={<CreateCampaign />} />
+        <Route path="/company" element={<CompanyDashboard />} />
+        <Route path="/company/create-campaign" element={<CreateCampaign />} />
 
         <Route path="/browse-projects" element={<BrowseProjects />} />
         <Route path="/donate/:id" element={<DonationForm />} />
@@ -84,14 +82,5 @@ function App() {
     </div>
   );
 }
-
-const CompanyLayout = () => {
-  return (
-    <div>
-      <CompanyDashboard />
-      <Outlet />
-    </div>
-  );
-};
 
 export default App;

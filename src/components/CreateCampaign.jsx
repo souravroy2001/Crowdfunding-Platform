@@ -10,6 +10,7 @@ import Sidebar from "./CreateCampaign/Sidebar";
 import Header from "./CreateCampaign/Header";
 import Footer from "./CreateCampaign/Footer";
 import { useSelector } from "react-redux";
+import CompanyNavbar from "./company-dashboard/CompanyNavbar";
 
 const steps = [
   {
@@ -106,6 +107,7 @@ function CreateCampaign() {
 
   return (
     <FormProvider {...methods}>
+      <CompanyNavbar />
       <div className="min-h-screen flex mt-[80px]">
         <Sidebar
           steps={updatedSteps}

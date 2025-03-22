@@ -171,7 +171,7 @@ function Home() {
         </div>
         <div className="featured-grid">
           {featuredProjects?.map((project, index) => (
-            <Link to={`/campaign/${index}`}>
+            <Link key={index} to={`/campaign/${index}`}>
               <div className="project-card" key={index}>
                 <img src={project.image} alt={project.title} />
                 <div className="card-content">

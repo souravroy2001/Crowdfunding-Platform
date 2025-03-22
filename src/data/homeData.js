@@ -25,7 +25,7 @@ export const heroData = {
     buttons: [
         {
             text: "Start a Campaign",
-            link: "/create-campaign",
+            link: "/company/create-campaign",
             primary: true
         },
         {

@@ -11,45 +11,47 @@ const CompanyNavbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 ${
+      className={`fixed top-0 p-2 left-0 right-0 z-50 ${
         theme ? "bg-white" : "bg-gray-800"
       } shadow-sm`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <img
-              src="/FundHive-logo.png"
-              alt="FundHive"
-              className="h-8 w-auto"
-            />
-          </Link>
+          <div className="flex justify-between items-center w-100">
+            {/* Logo */}
+            <Link to="/" className="flex items-center">
+              <img
+                src="/FundHive-logo.png"
+                alt="FundHive"
+                className="w-[120px]"
+              />
+            </Link>
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/company-dashboard"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                theme
-                  ? "text-gray-700 hover:text-gray-900"
-                  : "text-gray-300 hover:text-white"
-              }`}
-            >
-              <FaChartLine className="inline-block mr-1" />
-              Dashboard
-            </Link>
-            <Link
-              to="/company/supporters"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
-                theme
-                  ? "text-gray-700 hover:text-gray-900"
-                  : "text-gray-300 hover:text-white"
-              }`}
-            >
-              <FaUsers className="inline-block mr-1" />
-              Supporters
-            </Link>
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-left space-x-4">
+              <Link
+                to="/company"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  theme
+                    ? "text-gray-700 hover:text-gray-900"
+                    : "text-gray-300 hover:text-white"
+                }`}
+              >
+                <FaChartLine className="inline-block mr-1" />
+                Dashboard
+              </Link>
+              <Link
+                to="/company/supporters"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  theme
+                    ? "text-gray-700 hover:text-gray-900"
+                    : "text-gray-300 hover:text-white"
+                }`}
+              >
+                <FaUsers className="inline-block mr-1" />
+                Supporters
+              </Link>
+            </div>
           </div>
 
           {/* Right side buttons */}
@@ -77,7 +79,7 @@ const CompanyNavbar = () => {
             </Link>
 
             <Link
-              to="/create-campaign"
+              to="/company/create-campaign"
               className="ml-3 px-4 py-2 rounded-md text-sm font-medium text-white bg-[#00bfa5] hover:bg-[#00a693] flex items-center"
             >
               <FaPlus className="mr-1" />

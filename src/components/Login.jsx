@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../style/login.css";
 import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import bcrypt from "bcryptjs";
 
 function Login() {
   const [activeTab, setActiveTab] = useState("signin");
@@ -65,9 +66,25 @@ function Login() {
     });
   };
 
-  function handleUserSubmit(event) {
+  async function verifyPassword(plainPassword, hashedPassword) {
+    return await bcrypt.compare(plainPassword, hashedPassword);
+  }
+
+  async function handleUserLogin(event) {
     event.preventDefault();
-    console.log(userData);
+
+    const storedHashedPassword = JSON.parse(localStorage.getItem("userData"));
+
+    const isMatch = await verifyPassword(
+      userData.password,
+      storedHashedPassword
+    );
+
+    if (isMatch) {
+      console.log("✅ User authenticated!");
+    } else {
+      console.log("❌ Incorrect password!");
+    }
 
     setUserData({
       email: "",
@@ -76,9 +93,22 @@ function Login() {
     });
   }
 
-  function handleAdminSubmit(event) {
+  async function handleAdminLogin(event) {
     event.preventDefault();
-    console.log(adminData);
+
+    const storedHashedPassword = JSON.parse(localStorage.getItem("adminData"));
+
+    const isMatch = await verifyPassword(
+      adminData.password,
+      storedHashedPassword
+    );
+
+    if (isMatch) {
+      console.log("✅ Admin authenticated!");
+    } else {
+      console.log("❌ Incorrect password!");
+    }
+
     setAdminData({
       adminId: "",
       password: "",
@@ -86,9 +116,24 @@ function Login() {
     });
   }
 
-  function handleCompanySubmit(event) {
+  async function handleCompanyLogin(event) {
     event.preventDefault();
-    console.log(companyData);
+
+    const storedHashedPassword = JSON.parse(
+      localStorage.getItem("companyData")
+    );
+
+    const isMatch = await verifyPassword(
+      companyData.password,
+      storedHashedPassword
+    );
+
+    if (isMatch) {
+      console.log("✅ Company authenticated!");
+    } else {
+      console.log("❌ Incorrect password!");
+    }
+
     setCompanyData({
       companyCode: "",
       password: "",
@@ -130,13 +175,13 @@ function Login() {
       <div className="login-page-form-section">
         <div className="login-page-form-container">
           {/* Logo Section */}
-          <div className="login-page-logo-section">
+          <div className="flex flex-col items-center justify-center mb-2">
             <img
               src="/FundHive-logo.png"
               alt="FundHive Logo"
-              className="login-page-logo"
+              className="w-[120px] mb-4"
             />
-            <h1 className="login-page-form-title">Sign in to your account</h1>
+            <h1 className="text-2xl font-semibold">Signin to your account</h1>
           </div>
 
           {/* Tab Section */}
@@ -176,7 +221,7 @@ function Login() {
 
           {/* Forms for Each Tab */}
           <form
-            onSubmit={handleUserSubmit}
+            onSubmit={handleUserLogin}
             className={`login-page-form ${
               activeTab !== "signin" ? "hidden" : ""
             }`}
@@ -244,10 +289,32 @@ function Login() {
             <button type="submit" className="login-page-submit-button">
               Sign in
             </button>
+            {/* Divider and Social Buttons */}
+            <div className="login-page-divider">
+              <div className="login-page-divider-line"></div>
+              <span className="login-page-divider-text">Or continue with</span>
+            </div>
+
+            <div className="login-page-social-buttons">
+              <button type="button" className="login-page-social-button">
+                <i className="fab fa-google"></i>
+              </button>
+              <button type="button" className="login-page-social-button">
+                <i className="fab fa-facebook"></i>
+              </button>
+            </div>
+
+            {/* Signup Text */}
+            <p className="login-page-signin-text">
+              New to FundHive?
+              <Link to={"/register"} className="login-page-signin-link">
+                Create an account
+              </Link>
+            </p>
           </form>
 
           <form
-            onSubmit={handleAdminSubmit}
+            onSubmit={handleAdminLogin}
             className={`login-page-form ${
               activeTab !== "admin-login" ? "hidden" : ""
             }`}
@@ -318,7 +385,7 @@ function Login() {
           </form>
 
           <form
-            onSubmit={handleCompanySubmit}
+            onSubmit={handleCompanyLogin}
             className={`login-page-form ${
               activeTab !== "company-login" ? "hidden" : ""
             }`}
@@ -387,29 +454,6 @@ function Login() {
               Sign in
             </button>
           </form>
-
-          {/* Divider and Social Buttons */}
-          <div className="login-page-divider">
-            <div className="login-page-divider-line"></div>
-            <span className="login-page-divider-text">Or continue with</span>
-          </div>
-
-          <div className="login-page-social-buttons">
-            <button type="button" className="login-page-social-button">
-              <i className="fab fa-google"></i>
-            </button>
-            <button type="button" className="login-page-social-button">
-              <i className="fab fa-facebook"></i>
-            </button>
-          </div>
-
-          {/* Signup Text */}
-          <p className="login-page-signin-text">
-            New to FundHive?
-            <Link to={"/register"} className="login-page-signin-link">
-              Create an account
-            </Link>
-          </p>
         </div>
       </div>
     </div>

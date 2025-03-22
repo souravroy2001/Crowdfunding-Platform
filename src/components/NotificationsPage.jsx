@@ -15,6 +15,7 @@ import {
   markAsRead,
   updateFilters,
 } from "../redux/features/notificationsSlice";
+import Navbar from "./Navbar";
 
 const NotificationIcon = ({ type }) => {
   const darkMode = useSelector((state) => state.theme.darkMode);
@@ -270,6 +271,7 @@ const NotificationsPage = () => {
         !darkMode ? "bg-gray-900" : "bg-gray-50"
       }`}
     >
+      <Navbar />
       {/* Mobile Filters Overlay */}
       <AnimatePresence>
         {mobileFiltersOpen && (
