@@ -8,7 +8,6 @@ const PrivateRoute = ({ allowedRoles }) => {
 
   // Determine which user is authenticated
   const authenticatedUser = user || admin || company;
-  console.log("Authenticated User:", authenticatedUser);
 
   if (!authenticatedUser) {
     return <Navigate to="/sign-in" />;

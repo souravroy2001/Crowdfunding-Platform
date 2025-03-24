@@ -65,12 +65,24 @@ function MediaUploadStep() {
   };
 
   return (
-    <div className="space-y-8">
+    <div
+      className={`space-y-8 p-6 rounded-lg shadow-md ${
+        theme ? "bg-white" : "bg-gray-800"
+      }`}
+    >
       <div>
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
+        <h3
+          className={`text-lg font-medium leading-6 ${
+            theme ? "text-gray-900" : "text-white"
+          }`}
+        >
           Media Upload
         </h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <p
+          className={`mt-1 text-sm ${
+            theme ? "text-gray-500" : "text-gray-400"
+          }`}
+        >
           Upload your campaign images and videos
         </p>
       </div>
@@ -78,20 +90,38 @@ function MediaUploadStep() {
       <div className="space-y-6">
         <div
           {...getRootProps()}
-          className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-12"
+          className={`${
+            theme ? "bg-white" : "bg-gray-900"
+          } rounded-lg border-2 border-dashed border-gray-300 p-12`}
         >
           <div className="text-center">
-            <i className="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-4" />
-            <div className="text-sm text-gray-600">
+            <i
+              className={`fa-solid fa-cloud-arrow-up text-4xl mb-4 ${
+                theme ? "text-gray-400" : "text-gray-100"
+              }`}
+            />
+            <div
+              className={`text-sm ${theme ? "text-gray-600" : "text-gray-400"}`}
+            >
               <input {...getInputProps()} />
               <p>
-                <span className="text-[#1f2937] hover:text-[#1f2937f0] cursor-pointer">
+                <span
+                  className={`${
+                    theme
+                      ? "text-[#1f2937] hover:text-[#1f2937f0]"
+                      : "text-gray-300 hover:text-gray-400"
+                  } cursor-pointer`}
+                >
                   Upload files
                 </span>{" "}
                 or drag and drop
               </p>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
+            <p
+              className={`text-xs mt-2 ${
+                theme ? "text-gray-500" : "text-gray-400"
+              }`}
+            >
               PNG, JPG, GIF up to 10MB
             </p>
           </div>

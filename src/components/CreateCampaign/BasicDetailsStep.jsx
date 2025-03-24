@@ -33,13 +33,25 @@ function BasicDetailsStep() {
   };
 
   return (
-    <div className="space-y-8">
+    <div
+      className={`space-y-8 p-6 rounded-lg shadow-md ${
+        theme ? "bg-white" : "bg-gray-800"
+      }`}
+    >
       {/* Header Section */}
       <div>
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
+        <h3
+          className={`text-lg font-medium leading-6 text-gray-900 ${
+            theme ? "text-gray-900" : "text-white"
+          }`}
+        >
           Campaign Details
         </h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <p
+          className={`mt-1 text-sm ${
+            theme ? "text-gray-500" : "text-gray-400"
+          }`}
+        >
           This information will be displayed publicly, so be careful what you
           share.
         </p>
@@ -51,7 +63,9 @@ function BasicDetailsStep() {
         <div>
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-gray-700"
+            className={`block text-sm font-medium ${
+              theme ? "text-gray-700" : "text-gray-200"
+            }`}
           >
             Campaign Title
           </label>
@@ -60,7 +74,9 @@ function BasicDetailsStep() {
               type="text"
               id="title"
               {...register("title", { required: "Campaign title is required" })}
-              className={`block w-full rounded-md border-gray-300 p-2 border outline-none shadow-sm sm:text-sm ${
+              className={` ${
+                theme ? "text-gray-900" : "text-gray-50"
+              } block w-full rounded-md border-gray-300 p-2 border outline-none shadow-sm sm:text-sm ${
                 errors.title ? "border-red-500" : ""
               }`}
               placeholder="Enter your campaign title"
@@ -77,14 +93,18 @@ function BasicDetailsStep() {
         <div>
           <label
             htmlFor="category"
-            className="block text-sm font-medium text-gray-700"
+            className={`block text-sm font-medium ${
+              theme ? "text-gray-700" : "text-gray-200"
+            }`}
           >
             Category
           </label>
           <select
             id="category"
             {...register("category", { required: "Category is required" })}
-            className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 outline-none border sm:text-sm ${
+            className={`${
+              theme ? "text-gray-900" : "text-gray-50 bg-gray-800"
+            } mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 outline-none border sm:text-sm ${
               errors.category ? "border-red-500" : ""
             }`}
           >
@@ -107,7 +127,9 @@ function BasicDetailsStep() {
         <div>
           <label
             htmlFor="shortDescription"
-            className="block text-sm font-medium text-gray-700"
+            className={`block text-sm font-medium ${
+              theme ? "text-gray-700" : "text-gray-200"
+            }`}
           >
             Short Description
           </label>
@@ -122,7 +144,11 @@ function BasicDetailsStep() {
                 },
               })}
               rows={3}
-              className={`block w-full rounded-md border-gray-300 shadow-sm p-2 border outline-none sm:text-sm ${
+              className={`${
+                theme
+                  ? "text-gray-900 placeholder:text-gay-900"
+                  : "text-gray-50 placeholder:text-gay-50"
+              } block w-full rounded-md border-gray-300 shadow-sm p-2 border outline-none sm:text-sm ${
                 errors.shortDescription ? "border-red-500" : ""
               }`}
               placeholder="Write a brief description of your campaign"
@@ -133,14 +159,22 @@ function BasicDetailsStep() {
               </p>
             )}
           </div>
-          <p className="mt-2 text-sm text-gray-500">
+          <p
+            className={`mt-2 text-sm ${
+              theme ? "text-gray-500" : "text-gray-400"
+            }`}
+          >
             Brief description for your campaign. URLs are hyperlinked.
           </p>
         </div>
 
         {/* Campaign Tags */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label
+            className={`block text-sm font-medium ${
+              theme ? "text-gray-700" : "text-gray-200"
+            }`}
+          >
             Campaign Tags
           </label>
           <div className="mt-1">
@@ -149,7 +183,11 @@ function BasicDetailsStep() {
               {tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#1f2937] text-[#fff]"
+                  className={` inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    theme
+                      ? "bg-gray-900 hover:bg-gray-800 text-gray-100"
+                      : "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                  } `}
                 >
                   {tag}
                   <button
@@ -168,7 +206,9 @@ function BasicDetailsStep() {
                 <input
                   id="tag-input"
                   type="text"
-                  className="block rounded-md border-gray-300 shadow-sm p-2 outline-none border sm:text-sm"
+                  className={`block rounded-md border-gray-300 shadow-sm p-2 outline-none border sm:text-sm ${
+                    theme ? "text-gray-900" : "text-gray-50 bg-gray-800"
+                  } ${errors.tags ? "border-red-500" : ""}`}
                   placeholder="Add a tag"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {

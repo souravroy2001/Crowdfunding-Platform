@@ -30,7 +30,6 @@
 
 /* Card Styles */
 .campaign-details-card {
-    background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -71,7 +70,6 @@
 .campaign-details-title {
     font-size: 24px;
     font-weight: bold;
-    color: #111827;
 }
 
 .campaign-details-buttons {
@@ -80,7 +78,6 @@
 }
 
 .campaign-details-icon-button {
-    color: #6b7280;
     background: none;
     border: none;
     cursor: pointer;
@@ -103,7 +100,6 @@
 .campaign-details-progress-text {
     font-size: 14px;
     font-weight: 500;
-    color: #374151;
 }
 
 .campaign-details-progress-bar {
@@ -116,7 +112,7 @@
 
 .campaign-details-progress-fill {
     height: 100%;
-    background-color: #1f2937;
+    /* background-color: #1f2937; */
     border-radius: 4px;
 }
 
@@ -128,12 +124,11 @@
 
 .campaign-details-detail {
     font-size: 14px;
-    color: #6b7280;
+    /* color: #6b7280; */
 }
 
 .campaign-details-donate-button {
     width: 100%;
-    background-color: #1f2937;
     color: white;
     padding: 12px;
     font-size: 18px;
@@ -142,10 +137,6 @@
     border-radius: 8px;
     cursor: pointer;
     margin-bottom: 24px;
-}
-
-.campaign-details-donate-button:hover {
-    background-color: #1f2937;
 }
 
 .campaign-details-about-section {
@@ -171,7 +162,6 @@
 /* Reward Section */
 .campaign-details-reward-section {
     margin-top: 32px;
-    background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -187,15 +177,15 @@
 }
 
 .campaign-details-reward-card {
-    border: 1px solid #e5e7eb;
+    /* border: 1px solid #e5e7eb; */
     border-radius: 8px;
     padding: 16px;
     transition: border-color 0.3s;
 }
 
-.campaign-details-reward-card:hover {
+/* .campaign-details-reward-card:hover {
     border-color: #1f2937;
-}
+} */
 
 .campaign-details-reward-header {
     display: flex;
@@ -210,12 +200,11 @@
 
 .campaign-details-reward-description {
     font-size: 14px;
-    color: #6b7280;
+    /* color: #6b7280; */
     margin-top: 4px;
 }
 
 .campaign-details-reward-button {
-    background-color: #1f2937;
     color: white;
     padding: 8px 16px;
     font-size: 14px;
@@ -225,19 +214,19 @@
     cursor: pointer;
 }
 
-.campaign-details-reward-button:hover {
+/* .campaign-details-reward-button:hover {
     background-color: #1f2937;
-}
+} */
 
 .campaign-details-reward-details {
     font-size: 14px;
-    color: #374151;
+    /* color: #374151; */
     margin-top: 16px;
 }
 
 /* Sidebar Styles */
 .campaign-details-sidebar {
-    background-color: white;
+    /* background-color: white; */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 24px;
@@ -274,7 +263,7 @@
 
 .campaign-details-creator-role {
     font-size: 14px;
-    color: #6b7280;
+    /* color: #6b7280; */
 }
 
 .campaign-details-statistics-section {
@@ -295,7 +284,7 @@
 
 .campaign-details-statistic-label {
     font-size: 14px;
-    color: #6b7280;
+    /* color: #6b7280; */
 }
 
 .campaign-details-statistic-value {
@@ -336,7 +325,7 @@
 
 .campaign-details-supporter-info {
     font-size: 12px;
-    color: #6b7280;
+    /* color: #6b7280; */
 }
 
 .campaign-details-share-section {
@@ -366,16 +355,6 @@
     margin-right: 10px;
 }
 
-.campaign-details-share-button.twitter {
-    background-color: #1f2937;
-    color: white;
-}
-
-.campaign-details-share-button.facebook {
-    background-color: #1f2937;
-    color: white;
-}
-
 .campaign-details-share-button:hover {
     opacity: 0.9;
 }
@@ -392,7 +371,7 @@
 }
 
 .campaign-details-update {
-    border-left: 4px solid #1f2937;
+    /* border-left: 4px solid #1f2937; */
     padding-left: 16px;
 }
 
@@ -403,5 +382,5 @@
 
 .campaign-details-update-date {
     font-size: 12px;
-    color: #6b7280;
+    /* color: #6b7280; */
 }

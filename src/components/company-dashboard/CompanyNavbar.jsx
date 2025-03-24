@@ -13,7 +13,7 @@ const CompanyNavbar = () => {
   return (
     <nav
       className={`fixed top-0 p-2 left-0 right-0 z-50 ${
-        theme ? "bg-white" : "bg-gray-800"
+        theme ? "bg-white" : "bg-gray-800 border border-b-gray-600"
       } shadow-sm`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

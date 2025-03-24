@@ -12,7 +12,7 @@ function Footer({ onPrevious, onNext, isFirstStep, isLastStep }) {
 
   // Get the current form values
   const formData = watch();
-  
+
   // Function to handle the "Publish" button click
   function handlePunish() {
     if (formData.title.trim() === "") {
@@ -65,15 +65,29 @@ function Footer({ onPrevious, onNext, isFirstStep, isLastStep }) {
   }
 
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer
+      className={` ${
+        theme
+          ? "bg-gray-100 border-t border-gray-200"
+          : "bg-gray-900 border-t border-gray-700"
+      }`}
+    >
       <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <span className="text-sm text-gray-500">
+            <span
+              className={`${
+                theme ? "text-sm text-gray-500" : "text-sm text-gray-300"
+              }`}
+            >
               <i className="fa-regular fa-clock mr-1" />
               Last saved 2 minutes ago
             </span>
-            <span className="text-sm text-gray-500">
+            <span
+              className={`${
+                theme ? "text-sm text-gray-500" : "text-sm text-gray-300"
+              }`}
+            >
               <i className="fa-regular fa-circle-question mr-1" />
               Need help? Contact support
             </span>

@@ -20,11 +20,11 @@ import AdminSettings from "./admin-dashboard/AdminSettings";
 
 // Loading component with theme-aware styling
 const LoadingSpinner = () => {
-  const toggleTheme = useSelector((state) => state.theme.toggleTheme);
+  const toggleTheme = useSelector((state) => state.theme.darkMode);
   return (
     <div
       className={`flex items-center justify-center p-8 ${
-        toggleTheme ? "text-[#bb86fc]" : "text-[#00bfa5]"
+        toggleTheme ? "text-[#00bfa5]" : "text-[#00bfa5]"
       }`}
     >
       <div className="w-8 h-8 border-4 border-current border-t-transparent rounded-full animate-spin"></div>

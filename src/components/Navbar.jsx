@@ -7,6 +7,7 @@ import { toggleTheme } from "../redux/features/themeSlice";
 import { logoutUser } from "../redux/features/authSlice";
 import { logoutAdmin } from "../redux/features/adminSlice";
 import { logoutCompany } from "../redux/features/companySlice";
+import { FaBell } from "react-icons/fa";
 
 function Navbar() {
   const [isActive, setIsActive] = useState(false);
@@ -105,6 +106,16 @@ function Navbar() {
                     {" "}
                     <LuLayoutDashboard /> Dashboard
                   </button>
+                </Link>
+                <Link
+                  to="/notifications"
+                  className={`p-2 rounded-full ${
+                    theme
+                      ? "text-gray-600 hover:text-gray-900"
+                      : "text-gray-300 hover:text-white"
+                  }`}
+                >
+                  <FaBell size={20} />
                 </Link>
               </>
             ) : (
