@@ -159,11 +159,7 @@ npm run dev
 │
 ├── /node_modules           # Node.js dependencies
 ├── /public                 # Public assets (images, icons, etc.)
-│   ├── index.html          # Main HTML file
-│   ├── favicon.ico         # Favicon for the website
-│   ├── logo192.png         # App logo (192x192)
-│   ├── logo512.png         # App logo (512x512)
-│   └── manifest.json       # Web app manifest
+│   
 │
 ├── /src
 │   ├── /components         # Reusable components organized by feature
