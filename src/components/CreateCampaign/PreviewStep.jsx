@@ -80,7 +80,7 @@ function PreviewStep() {
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <h4 className="text-lg font-medium mb-4">Story</h4>
           <div className="prose max-w-none">
-            <p>{formData.story}</p>
+            <p className="whitespace-pre-wrap">{formData.story}</p>
           </div>
         </div>
 

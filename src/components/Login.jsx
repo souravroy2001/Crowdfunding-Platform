@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import "../style/login.css";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import bcrypt from "bcryptjs";
+import { loginUser } from "../redux/features/authSlice";
+import { loginCompany } from "../redux/features/companySlice";
+import { loginAdmin } from "../redux/features/adminSlice";
+import {
+  registerOrLoginWithFacebook,
+  registerOrLoginWithGoogle,
+} from "../firebase/auth";
 
 function Login() {
   const [activeTab, setActiveTab] = useState("signin");
   const [showPassword, setShowPassword] = useState(false);
   const theme = useSelector((state) => state.theme.darkMode);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // State for user, admin, and company forms
   const [userData, setUserData] = useState({
@@ -66,25 +73,32 @@ function Login() {
     });
   };
 
-  async function verifyPassword(plainPassword, hashedPassword) {
-    return await bcrypt.compare(plainPassword, hashedPassword);
-  }
+  const handleGoogleAuth = async () => {
+    try {
+      await registerOrLoginWithGoogle();
+    } catch (error) {
+      toast.error("Google Auth Error:", error.message);
+    }
+  };
+
+  const handleFacebookAuth = async () => {
+    try {
+      await registerOrLoginWithFacebook();
+    } catch (error) {
+      toast.error("Facebook Auth Error:", error.message);
+    }
+  };
 
   async function handleUserLogin(event) {
     event.preventDefault();
 
-    const storedHashedPassword = JSON.parse(localStorage.getItem("userData"));
-
-    const isMatch = await verifyPassword(
-      userData.password,
-      storedHashedPassword
+    dispatch(
+      loginUser({
+        email: userData.email,
+        password: userData.password,
+        navigate,
+      })
     );
-
-    if (isMatch) {
-      console.log("✅ User authenticated!");
-    } else {
-      console.log("❌ Incorrect password!");
-    }
 
     setUserData({
       email: "",
@@ -96,18 +110,7 @@ function Login() {
   async function handleAdminLogin(event) {
     event.preventDefault();
 
-    const storedHashedPassword = JSON.parse(localStorage.getItem("adminData"));
-
-    const isMatch = await verifyPassword(
-      adminData.password,
-      storedHashedPassword
-    );
-
-    if (isMatch) {
-      console.log("✅ Admin authenticated!");
-    } else {
-      console.log("❌ Incorrect password!");
-    }
+    dispatch(loginAdmin({ ...adminData, navigate }));
 
     setAdminData({
       adminId: "",
@@ -119,20 +122,7 @@ function Login() {
   async function handleCompanyLogin(event) {
     event.preventDefault();
 
-    const storedHashedPassword = JSON.parse(
-      localStorage.getItem("companyData")
-    );
-
-    const isMatch = await verifyPassword(
-      companyData.password,
-      storedHashedPassword
-    );
-
-    if (isMatch) {
-      console.log("✅ Company authenticated!");
-    } else {
-      console.log("❌ Incorrect password!");
-    }
+    dispatch(loginCompany({ ...companyData, navigate }));
 
     setCompanyData({
       companyCode: "",
@@ -140,6 +130,12 @@ function Login() {
       rememberMe: false,
     });
   }
+
+  // Active tab styles
+  const login_page_tab_active = {
+    color: theme ? "#000" : "#fff",
+    borderBottom: `2px solid ${theme ? "#000" : "#fff"}`,
+  };
 
   return (
     <div className="login-page-container">
@@ -152,7 +148,10 @@ function Login() {
             className="login-page-hero-image"
           />
         </div>
-        <div className="login-page-hero-overlay"></div>
+        <div
+          className="login-page-hero-overlay"
+          style={{ background: theme && "rgba(2, 12, 29, 0.664)" }}
+        ></div>
         <div className="login-page-hero-content">
           <h2 className="login-page-hero-title">
             {activeTab === "signin"
@@ -172,7 +171,10 @@ function Login() {
       </div>
 
       {/* Form Section */}
-      <div className="login-page-form-section">
+      <div
+        className="login-page-form-section"
+        style={{ background: !theme && "#1e2939" }}
+      >
         <div className="login-page-form-container">
           {/* Logo Section */}
           <div className="flex flex-col items-center justify-center mb-2">
@@ -181,40 +183,61 @@ function Login() {
               alt="FundHive Logo"
               className="w-[120px] mb-4"
             />
-            <h1 className="text-2xl font-semibold">Signin to your account</h1>
+            <h1
+              className="text-2xl font-semibold"
+              style={{ color: !theme && "#fff" }}
+            >
+              Signin to your account
+            </h1>
           </div>
 
           {/* Tab Section */}
           <div className="login-page-tab-section">
-            <div className="login-page-tab-container">
+            <div
+              className="login-page-tab-container"
+              style={{ borderBottom: !theme && "1px solid #333" }}
+            >
+              {/* User Login Tab */}
               <button
-                className={`login-page-tab-button ${
-                  activeTab === "signin" ? "login-page-tab-active" : ""
-                }`}
+                style={{
+                  color: !theme ? "#fff" : "#000",
+                  ...(activeTab === "signin" && login_page_tab_active),
+                }}
+                className="login-page-tab-button"
                 onClick={() => handleTabClick("signin")}
                 data-tab="signin"
               >
                 <i className="fas fa-user-plus icon-before-login"></i> User
               </button>
+
               {/* Admin Login Tab */}
               <button
-                className={`login-page-tab-button ${
-                  activeTab === "admin-login" ? "login-page-tab-active" : ""
-                }`}
+                style={{
+                  color: !theme ? "#ccc" : "#000",
+                  ...(activeTab === "admin-login" && login_page_tab_active),
+                }}
+                className="login-page-tab-button"
                 onClick={() => handleTabClick("admin-login")}
                 data-tab="admin-login"
               >
                 <i className="fas fa-shield-alt icon-before-login"></i> Admin
               </button>
-              {/* Company Registration Tab */}
+
+              {/* Company Login Tab */}
               <button
-                className={`login-page-tab-button ${
-                  activeTab === "company-login" ? "login-page-tab-active" : ""
-                }`}
+                style={{
+                  color: !theme ? "#ccc" : "#000",
+                  ...(activeTab === "company-login" && login_page_tab_active),
+                }}
+                className="login-page-tab-button"
                 onClick={() => handleTabClick("company-login")}
                 data-tab="company-login"
               >
-                <i className="fas fa-building icon-before-login"></i> Company
+                <i
+                  className="fas fa-building icon-before-login"
+                  style={{ color: !theme ? "#ccc" : "#000" }}
+                ></i>{" "}
+                Company
               </button>
             </div>
           </div>
@@ -227,11 +250,25 @@ function Login() {
             }`}
             id="user-form"
           >
+            {/* Email Input */}
             <div className="login-page-input-group">
-              <label className="login-page-input-label">Email address</label>
+              <label
+                className="login-page-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Email address
+              </label>
               <div className="login-page-input-wrapper">
-                <i className="fas fa-envelope login-page-input-icon"></i>
+                <i
+                  className="fas fa-envelope login-page-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="email"
                   className="login-page-input"
                   placeholder="Enter your email"
@@ -243,11 +280,25 @@ function Login() {
               </div>
             </div>
 
+            {/* Password Input */}
             <div className="login-page-input-group">
-              <label className="login-page-input-label">Password</label>
+              <label
+                className="login-page-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Password
+              </label>
               <div className="login-page-input-wrapper">
-                <i className="fas fa-lock login-page-input-icon"></i>
+                <i
+                  className="fas fa-lock login-page-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type={showPassword ? "text" : "password"}
                   className="login-page-input"
                   placeholder="Enter your password"
@@ -265,11 +316,13 @@ function Login() {
                     className={`fas ${
                       showPassword ? "fa-eye-slash" : "fa-eye"
                     } login-page-input-icon-eye`}
+                    style={{ color: !theme && "#fff" }}
                   ></i>
                 </button>
               </div>
             </div>
 
+            {/* Remember Me and Forgot Password */}
             <div className="login-page-remember-forgot">
               <div className="login-page-remember-me">
                 <input
@@ -279,35 +332,88 @@ function Login() {
                   checked={userData.rememberMe}
                   onChange={handleUserInputChange}
                 />
-                <label className="login-page-checkbox-label">Remember me</label>
+                <label
+                  className="login-page-checkbox-label"
+                  style={{ color: !theme && "#fff" }}
+                >
+                  Remember me
+                </label>
               </div>
-              <Link to={"/"} className="login-page-forgot-password">
+              <Link
+                to={"/"}
+                className="login-page-forgot-password"
+                style={{ color: !theme && "#fff" }}
+              >
                 Forgot password?
               </Link>
             </div>
 
-            <button type="submit" className="login-page-submit-button">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="login-page-submit-button"
+              style={{
+                backgroundColor: !theme && "#fff",
+                color: !theme && "#000",
+                borderColor: !theme && "#ccc",
+              }}
+            >
               Sign in
             </button>
+
             {/* Divider and Social Buttons */}
             <div className="login-page-divider">
               <div className="login-page-divider-line"></div>
-              <span className="login-page-divider-text">Or continue with</span>
+              <span
+                className="login-page-divider-text"
+                style={{
+                  color: !theme && "#fff",
+                  backgroundColor: !theme && "#1e2939",
+                }}
+              >
+                Or continue with
+              </span>
             </div>
 
+            {/* Social Buttons */}
             <div className="login-page-social-buttons">
-              <button type="button" className="login-page-social-button">
+              <button
+                onClick={handleGoogleAuth}
+                type="button"
+                className="login-page-social-button"
+                style={{
+                  backgroundColor: !theme ? "#1f2937" : "#fff",
+                  color: !theme ? "#fff" : "#000",
+                  borderColor: !theme ? "#ccc" : "#000",
+                }}
+              >
                 <i className="fab fa-google"></i>
               </button>
-              <button type="button" className="login-page-social-button">
+              <button
+                onClick={handleFacebookAuth}
+                type="button"
+                className="login-page-social-button"
+                style={{
+                  backgroundColor: !theme ? "#1f2937" : "#fff",
+                  color: !theme ? "#fff" : "#000",
+                  borderColor: !theme ? "#ccc" : "#000",
+                }}
+              >
                 <i className="fab fa-facebook"></i>
               </button>
             </div>
 
             {/* Signup Text */}
-            <p className="login-page-signin-text">
+            <p
+              className="login-page-signin-text"
+              style={{ color: !theme ? "#fff" : "#000" }}
+            >
               New to FundHive?
-              <Link to={"/register"} className="login-page-signin-link">
+              <Link
+                to={"/register"}
+                className="login-page-signin-link"
+                style={{ color: !theme ? "#fff" : "#000" }}
+              >
                 Create an account
               </Link>
             </p>
@@ -320,11 +426,25 @@ function Login() {
             }`}
             id="admin-form"
           >
+            {/* Admin ID Input */}
             <div className="login-page-input-group">
-              <label className="login-page-input-label">Admin ID</label>
+              <label
+                className="login-page-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Admin ID
+              </label>
               <div className="login-page-input-wrapper">
-                <i className="fas fa-id-card login-page-input-icon"></i>
+                <i
+                  className="fas fa-id-card login-page-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   className="login-page-input"
                   placeholder="Enter your admin ID"
@@ -336,11 +456,25 @@ function Login() {
               </div>
             </div>
 
+            {/* Password Input */}
             <div className="login-page-input-group">
-              <label className="login-page-input-label">Password</label>
+              <label
+                className="login-page-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Password
+              </label>
               <div className="login-page-input-wrapper">
-                <i className="fas fa-lock login-page-input-icon"></i>
+                <i
+                  className="fas fa-lock login-page-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type={showPassword ? "text" : "password"}
                   className="login-page-input"
                   placeholder="Enter your password"
@@ -358,11 +492,13 @@ function Login() {
                     className={`fas ${
                       showPassword ? "fa-eye-slash" : "fa-eye"
                     } login-page-input-icon-eye`}
+                    style={{ color: !theme && "#fff" }}
                   ></i>
                 </button>
               </div>
             </div>
 
+            {/* Remember Me and Forgot Password */}
             <div className="login-page-remember-forgot">
               <div className="login-page-remember-me">
                 <input
@@ -372,16 +508,48 @@ function Login() {
                   checked={adminData.rememberMe}
                   onChange={handleAdminInputChange}
                 />
-                <label className="login-page-checkbox-label">Remember me</label>
+                <label
+                  className="login-page-checkbox-label"
+                  style={{ color: !theme && "#fff" }}
+                >
+                  Remember me
+                </label>
               </div>
-              <Link to={"/"} className="login-page-forgot-password">
+              <Link
+                to={"/"}
+                className="login-page-forgot-password"
+                style={{ color: !theme && "#fff" }}
+              >
                 Forgot password?
               </Link>
             </div>
 
-            <button type="submit" className="login-page-submit-button">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="login-page-submit-button"
+              style={{
+                backgroundColor: !theme && "#fff",
+                color: !theme && "#000",
+                borderColor: !theme && "#ccc",
+              }}
+            >
               Sign in
             </button>
+            {/* Signup Text */}
+            <p
+              className="login-page-signin-text"
+              style={{ color: !theme ? "#fff" : "#000" }}
+            >
+              New to FundHive?
+              <Link
+                to={"/register"}
+                className="login-page-signin-link"
+                style={{ color: !theme ? "#fff" : "#000" }}
+              >
+                Create an account
+              </Link>
+            </p>
           </form>
 
           <form
@@ -391,11 +559,25 @@ function Login() {
             }`}
             id="company-form"
           >
+            {/* Company Code Input */}
             <div className="login-page-input-group">
-              <label className="login-page-input-label">Company Code</label>
+              <label
+                className="login-page-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Company Code
+              </label>
               <div className="login-page-input-wrapper">
-                <i className="fas fa-building login-page-input-icon"></i>
+                <i
+                  className="fas fa-building login-page-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   className="login-page-input"
                   placeholder="Enter your company code"
@@ -407,11 +589,25 @@ function Login() {
               </div>
             </div>
 
+            {/* Password Input */}
             <div className="login-page-input-group">
-              <label className="login-page-input-label">Password</label>
+              <label
+                className="login-page-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Password
+              </label>
               <div className="login-page-input-wrapper">
-                <i className="fas fa-lock login-page-input-icon"></i>
+                <i
+                  className="fas fa-lock login-page-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type={showPassword ? "text" : "password"}
                   className="login-page-input"
                   placeholder="Enter your password"
@@ -429,11 +625,13 @@ function Login() {
                     className={`fas ${
                       showPassword ? "fa-eye-slash" : "fa-eye"
                     } login-page-input-icon-eye`}
+                    style={{ color: !theme && "#fff" }}
                   ></i>
                 </button>
               </div>
             </div>
 
+            {/* Remember Me and Forgot Password */}
             <div className="login-page-remember-forgot">
               <div className="login-page-remember-me">
                 <input
@@ -443,16 +641,48 @@ function Login() {
                   checked={companyData.rememberMe}
                   onChange={handleCompanyInputChange}
                 />
-                <label className="login-page-checkbox-label">Remember me</label>
+                <label
+                  className="login-page-checkbox-label"
+                  style={{ color: !theme && "#fff" }}
+                >
+                  Remember me
+                </label>
               </div>
-              <Link to={"/"} className="login-page-forgot-password">
+              <Link
+                to={"/"}
+                className="login-page-forgot-password"
+                style={{ color: !theme && "#fff" }}
+              >
                 Forgot password?
               </Link>
             </div>
 
-            <button type="submit" className="login-page-submit-button">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="login-page-submit-button"
+              style={{
+                backgroundColor: !theme && "#fff",
+                color: !theme && "#000",
+                borderColor: !theme && "#ccc",
+              }}
+            >
               Sign in
             </button>
+            {/* Signup Text */}
+            <p
+              className="login-page-signin-text"
+              style={{ color: !theme ? "#fff" : "#000" }}
+            >
+              New to FundHive?
+              <Link
+                to={"/register"}
+                className="login-page-signin-link"
+                style={{ color: !theme ? "#fff" : "#000" }}
+              >
+                Create an account
+              </Link>
+            </p>
           </form>
         </div>
       </div>

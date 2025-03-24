@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
+import { useSelector } from 'react-redux';
 
 const RevenueChart = () => {
   const chartRef = useRef(null);
+  const theme = useSelector((state) => state.theme.darkMode);
 
   useEffect(() => {
     const chart = echarts.init(chartRef.current);
-    
+
     const option = {
       animation: false,
       tooltip: {
@@ -39,7 +41,7 @@ const RevenueChart = () => {
             y2: 1,
             colorStops: [{
               offset: 0,
-              color: 'rgba(0, 191, 165, 0.2)' // Using primary color from theme
+              color: 'rgba(0, 191, 165, 0.2)'
             }, {
               offset: 1,
               color: 'rgba(0, 191, 165, 0)'
@@ -71,10 +73,14 @@ const RevenueChart = () => {
   }, []);
 
   return (
-    <div className="bg-white rounded-lg shadow">
+    <div
+      className={`${
+        theme ? "bg-white text-gray-900" : "bg-gray-800 text-white"
+      } rounded-lg shadow`}
+    >
       <div className="p-6">
-        <h2 className="text-lg font-medium text-gray-900">Revenue Overview</h2>
-        <div ref={chartRef} className="mt-4" style={{ height: '300px' }} />
+        <h2 className="text-lg font-medium">Revenue Overview</h2>
+        <div ref={chartRef} className="mt-4" style={{ height: "300px" }} />
       </div>
     </div>
   );

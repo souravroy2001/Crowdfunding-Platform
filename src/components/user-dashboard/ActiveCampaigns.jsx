@@ -173,9 +173,9 @@ const ActiveCampaigns = () => {
       )}
 
       <div className="mt-6">
-        <Link to="/create-campaign" className="block w-full">
+        <Link to={`/browse-projects`} className="block w-full">
           <button className="w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-300 bg-[#00bfa5] hover:bg-[#00a392] text-white">
-            Create Campaign
+            Give to Support
           </button>
         </Link>
       </div>

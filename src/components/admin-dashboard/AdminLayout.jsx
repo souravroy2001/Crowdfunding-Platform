@@ -7,7 +7,7 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 
 const AdminLayout = ({ children }) => {
-  const toggleTheme = useSelector((state) => state.theme.toggleTheme);
+  const toggleTheme = useSelector((state) => state.theme.darkMode);
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -19,12 +19,12 @@ const AdminLayout = ({ children }) => {
   }, [location.pathname]);
 
   return (
-    <div className={`min-h-screen ${toggleTheme ? 'bg-gray-900' : 'bg-gray-50'} font-sans`}>
+    <div className={`min-h-screen ${!toggleTheme ? 'bg-gray-900' : 'bg-gray-50'} font-sans`}>
       {/* Mobile Sidebar Toggle Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         className={`md:hidden fixed top-3 left-4 z-50 p-2 rounded-lg transition-colors duration-300 ${
-          toggleTheme
+          !toggleTheme
             ? 'text-gray-200 hover:bg-gray-700'
             : 'text-gray-600 hover:bg-gray-200'
         }`}

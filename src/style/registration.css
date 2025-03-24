@@ -76,15 +76,13 @@
   padding: 20px;
   overflow-y: auto;
   scrollbar-width: none;
-  height: 100vh;
-  /* margin-top: 80px; */
+  height: 100dvh;
 }
 
 .registration-form-container {
   max-width: 400px;
   width: 100%;
   margin: auto;
-  margin-top: 80px;
 }
 
 /* Logo Section */

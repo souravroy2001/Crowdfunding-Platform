@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import ProjectCard from "./browse-projects/ProjectCard";
 import { toggleFavorite } from "../redux/features/favoritesSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchCampaigns } from "../redux/features/campaignSlice";
 
 const BrowseProjects = () => {
   const theme = useSelector((state) => state.theme.darkMode);
   const projectsFromRedux = useSelector((state) => state.projects.projects);
   const favoriteProjects = useSelector((state) => state.favorites.favorites);
   const dispatch = useDispatch();
+  const projects = useSelector((state) => state.campaigns.campaigns);
+
+  useEffect(() => {
+    dispatch(fetchCampaigns());
+  }, []);
 
   // Extract unique categories dynamically
   const categories = [
@@ -70,6 +76,7 @@ const BrowseProjects = () => {
         theme ? "bg-gray-50" : "bg-gray-900"
       }`}
     >
+      {console.log(projects)}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12">

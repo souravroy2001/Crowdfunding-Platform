@@ -46,91 +46,92 @@ function RewardsStep() {
       </div>
 
       <div className="space-y-6">
-        {rewards.map((reward) => (
-          <div
-            key={reward.id}
-            className="bg-white p-6 rounded-lg border border-gray-200 space-y-4"
-          >
-            <div className="flex justify-between">
-              <div className="flex-1 mr-4">
+        {rewards.length > 0 &&
+          rewards?.map((reward) => (
+            <div
+              key={reward.id}
+              className="bg-white p-6 rounded-lg border border-gray-200 space-y-4"
+            >
+              <div className="flex justify-between">
+                <div className="flex-1 mr-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Reward Title
+                  </label>
+                  <input
+                    type="text"
+                    value={reward.title}
+                    placeholder="Reward Title"
+                    onChange={(e) =>
+                      updateReward(reward.id, "title", e.target.value)
+                    }
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border outline-none sm:text-sm"
+                  />
+                </div>
+                <div className="w-32">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Amount
+                  </label>
+                  <div className="mt-1 relative rounded-md shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span className="text-gray-500 sm:text-sm">$</span>
+                    </div>
+                    <input
+                      type="number"
+                      value={reward.amount}
+                      onChange={(e) =>
+                        updateReward(
+                          reward.id,
+                          "amount",
+                          parseFloat(e.target.value)
+                        )
+                      }
+                      className="block w-full pl-7 rounded-md border-gray-300 p-2 border outline-none sm:text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Reward Title
+                  Description
                 </label>
-                <input
-                  type="text"
-                  value={reward.title}
-                  placeholder="Reward Title"
+                <textarea
+                  value={reward.description}
                   onChange={(e) =>
-                    updateReward(reward.id, "title", e.target.value)
+                    updateReward(reward.id, "description", e.target.value)
                   }
+                  rows={3}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border outline-none sm:text-sm"
                 />
               </div>
-              <div className="w-32">
+
+              <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Amount
+                  Limit (Optional)
                 </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="text-gray-500 sm:text-sm">$</span>
-                  </div>
-                  <input
-                    type="number"
-                    value={reward.amount}
-                    onChange={(e) =>
-                      updateReward(
-                        reward.id,
-                        "amount",
-                        parseFloat(e.target.value)
-                      )
-                    }
-                    className="block w-full pl-7 rounded-md border-gray-300 p-2 border outline-none sm:text-sm"
-                  />
-                </div>
+                <input
+                  type="number"
+                  value={reward.limit || ""}
+                  onChange={(e) =>
+                    updateReward(reward.id, "limit", parseInt(e.target.value))
+                  }
+                  className="mt-1 block w-32 rounded-md border-gray-300 shadow-sm p-2 border outline-none sm:text-sm"
+                  placeholder="No limit"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => removeReward(reward.id)}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <i className="fa-solid fa-trash mr-1" />
+                  Remove Reward
+                </button>
               </div>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Description
-              </label>
-              <textarea
-                value={reward.description}
-                onChange={(e) =>
-                  updateReward(reward.id, "description", e.target.value)
-                }
-                rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border outline-none sm:text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Limit (Optional)
-              </label>
-              <input
-                type="number"
-                value={reward.limit || ""}
-                onChange={(e) =>
-                  updateReward(reward.id, "limit", parseInt(e.target.value))
-                }
-                className="mt-1 block w-32 rounded-md border-gray-300 shadow-sm p-2 border outline-none sm:text-sm"
-                placeholder="No limit"
-              />
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => removeReward(reward.id)}
-                className="text-red-600 hover:text-red-700"
-              >
-                <i className="fa-solid fa-trash mr-1" />
-                Remove Reward
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
 
         <button
           type="button"

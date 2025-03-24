@@ -4,6 +4,14 @@ import { Link } from "react-router";
 
 function Footer() {
   const theme = useSelector((state) => state.theme.darkMode);
+  const emailInputRef = React.useRef(null);
+
+  function handleSubmit(events) {
+    events.preventDefault();
+    const email = emailInputRef.current.value;
+    console.log("Email:", email);
+  }
+
   return (
     <footer
       className="footer"
@@ -32,7 +40,7 @@ function Footer() {
           <h3 style={{ color: !theme && "#fff" }}>Company</h3>
           <ul>
             <li>
-              <Link style={{ color: !theme && "#ccc" }} to={"/about"}>
+              <Link style={{ color: !theme && "#ccc" }} to={"/about-us"}>
                 About
               </Link>
             </li>
@@ -89,7 +97,11 @@ function Footer() {
             Subscribe to our newsletter for the latest updates and success
             stories.
           </p>
-          <form className="newsletter-form" style={{ color: !theme && "#000" }}>
+          <form
+            onSubmit={handleSubmit}
+            className="newsletter-form"
+            style={{ color: !theme && "#000" }}
+          >
             <input
               type="email"
               name="newsletter-email"
@@ -99,6 +111,7 @@ function Footer() {
               aria-required
               autoCapitalize="on"
               autoCorrect="on"
+              ref={emailInputRef}
               style={{ color: theme && "#000" }}
             />
             <button type="submit">Subscribe</button>

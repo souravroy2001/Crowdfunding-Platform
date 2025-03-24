@@ -556,15 +556,17 @@ function Home() {
                       </li>
                     ))}
                   </ul>
-                  <button
-                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
-                      theme
-                        ? `bg-[#009688] hover:bg-[#00bfa5] text-white`
-                        : `bg-[#009688] hover:bg-[#00bfa5] text-white`
-                    }`}
-                  >
-                    {plan?.buttonText}
-                  </button>
+                  <Link to={"/coming-soon"}>
+                    <button
+                      className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
+                        theme
+                          ? `bg-[#009688] hover:bg-[#00bfa5] text-white`
+                          : `bg-[#009688] hover:bg-[#00bfa5] text-white`
+                      }`}
+                    >
+                      {plan?.buttonText}
+                    </button>
+                  </Link>
                 </div>
               ))}
             </div>

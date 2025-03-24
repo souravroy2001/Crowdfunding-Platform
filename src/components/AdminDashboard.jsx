@@ -9,6 +9,14 @@ import CampaignChart from "./admin-dashboard/CampaignChart";
 import DemographicsChart from "./admin-dashboard/DemographicsChart";
 import LatestDonations from "./admin-dashboard/LatestDonations";
 import PendingApprovals from "./admin-dashboard/PendingApprovals";
+import AdminCampaigns from "./admin-campaigns/AdminCampaigns";
+import AdminCompanies from "./admin-dashboard/AdminCompanies";
+import CompanyDetail from "./admin-dashboard/CompanyDetail";
+import AdminDonations from "./admin-dashboard/AdminDonations";
+import AdminUsers from "./admin-dashboard/AdminUsers";
+import AdminAnalytics from "./admin-dashboard/AdminAnalytics";
+import AdminReports from "./admin-dashboard/AdminReports";
+import AdminSettings from "./admin-dashboard/AdminSettings";
 
 // Loading component with theme-aware styling
 const LoadingSpinner = () => {
@@ -66,8 +74,15 @@ const AdminDashboard = () => {
     <AdminLayout>
       <Routes>
         <Route index element={<DashboardOverview />} />
+        <Route path="campaigns/*" element={<AdminCampaigns />} />
+        <Route path="companies" element={<AdminCompanies />} />
+        <Route path="companies/:id" element={<CompanyDetail />} />
+        <Route path="donations" element={<AdminDonations />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="analytics" element={<AdminAnalytics />} />
+        <Route path="reports" element={<AdminReports />} />
+        <Route path="settings" element={<AdminSettings />} />
       </Routes>
-      <Outlet />
     </AdminLayout>
   );
 };

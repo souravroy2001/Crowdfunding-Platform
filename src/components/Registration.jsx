@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../style/registration.css";
 import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import bcrypt from "bcryptjs";
+import { registerUser } from "../redux/features/authSlice";
+import { toast } from "react-toastify";
+import { registerCompany } from "../redux/features/companySlice";
+import { registerAdmin } from "../redux/features/adminSlice";
+import {
+  registerOrLoginWithFacebook,
+  registerOrLoginWithGoogle,
+} from "../firebase/auth";
+import { firestore } from "../firebase/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 function Registration() {
   const [activeTab, setActiveTab] = useState("signup");
@@ -11,6 +21,11 @@ function Registration() {
   const [emailValid, setEmailValid] = useState(true);
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme.darkMode);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState(null);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const navigate = useNavigate();
 
   // State for user, admin, and company forms
   const [userData, setUserData] = useState({
@@ -80,9 +95,36 @@ function Registration() {
   // Handle email input change
   const handleEmailChange = (e) => {
     const email = e.target.value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setEmailValid(emailRegex.test(email));
     setUserData({ ...userData, email });
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (userData.username.length >= 5) {
+        checkUsernameExists(userData.username);
+      } else if (userData.username.length > 0) {
+        setIsUsernameAvailable(false);
+        toast.warning("Username must be at least 5 characters.");
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [userData.username]);
+
+  // Function to check if the username exists
+  const checkUsernameExists = async (username) => {
+    const usersRef = collection(firestore, "users");
+    const q = query(usersRef, where("username", "==", username));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      setIsUsernameAvailable(false);
+      toast.error("Username already taken. Try another.");
+    } else {
+      setIsUsernameAvailable(true);
+      toast.success("Username is available!");
+    }
   };
 
   // Handle user input change
@@ -112,26 +154,56 @@ function Registration() {
     });
   };
 
-  async function hashPassword(password) {
-    const saltRounds = 12;
-    return await bcrypt.hash(password, saltRounds);
-  }
+  const handleGoogleAuth = async () => {
+    try {
+      await registerOrLoginWithGoogle();
+    } catch (error) {
+      toast.error("Google Auth Error:", error.message);
+    }
+  };
 
-  async function handleUserSubmit(event) {
+  const handleFacebookAuth = async () => {
+    try {
+      await registerOrLoginWithFacebook();
+    } catch (error) {
+      toast.error("Facebook Auth Error:", error.message);
+    }
+  };
+
+  function handleUserSubmit(event) {
     event.preventDefault();
 
-    const hashedPassword = await hashPassword(userData.password);
-    const hashedConfirmPassword = await hashPassword(userData.confirmPassword);
+    if (userData.fullName.trim() === "") {
+      toast.error("Please enter your full name.");
+      return;
+    }
 
-    localStorage.setItem("userData", JSON.stringify(hashedPassword));
+    if (userData.username.trim() === "") {
+      toast.error("Please enter your username.");
+      return;
+    }
 
-    const newUserData = {
-      ...userData,
-      password: hashedPassword,
-      confirmPassword: hashedConfirmPassword,
-    };
+    if (!emailValid) {
+      toast.error("Please enter a valid email.");
+      return;
+    }
 
-    console.log(newUserData); // Do not log passwords in production!
+    if (passwordStrength === "weak" || passwordStrength === "medium") {
+      toast.error("Password is too weak. Use a stronger password.");
+      return;
+    }
+
+    if (!isUsernameAvailable) {
+      toast.error("Username already taken. Try another.");
+      return;
+    }
+
+    if (userData.password !== userData.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    dispatch(registerUser({ user: userData, navigate }));
 
     setUserData({
       fullName: "",
@@ -155,18 +227,33 @@ function Registration() {
   async function handleAdminSubmit(event) {
     event.preventDefault();
 
-    const hashedPassword = await hashPassword(adminData.password);
     const adminId = generateAdminId(adminData.emailOrUsername);
-
-    localStorage.setItem("adminData", JSON.stringify(hashedPassword));
 
     const newAdminData = {
       ...adminData,
       adminId,
-      password: hashedPassword,
     };
 
-    console.log(newAdminData);
+    const isValidEmail = emailRegex.test(adminData.emailOrUsername);
+    const isPasswordStrong = passwordRegex.test(adminData.password);
+
+    if (!isValidEmail) {
+      toast.error("Please enter a valid email.");
+      return;
+    }
+
+    if (!isPasswordStrong) {
+      toast.error("Password is too weak. Use a stronger password.");
+      return;
+    }
+
+    if (adminData.verificationCode !== "123456") {
+      toast.warning("Invalid verification code");
+      return;
+    }
+
+    const adminRegisterData = { ...newAdminData };
+    dispatch(registerAdmin({ admin: adminRegisterData, navigate }));
 
     setAdminData({
       emailOrUsername: "",
@@ -181,24 +268,81 @@ function Registration() {
     return companyName.substring(0, 3).toUpperCase() + randomPart;
   }
 
-  async function handleCompanySubmit(event) {
+  function handleCompanySubmit(event) {
     event.preventDefault();
 
-    const hashedPassword = await hashPassword(companyData.password);
     const companyCode = generateCompanyCode(
       companyData.companyName,
       companyData.businessRegistrationNumber
     );
 
-    localStorage.setItem("companyData", JSON.stringify(hashedPassword));
-
     const newCompanyData = {
       ...companyData,
       companyCode,
-      password: hashedPassword,
     };
 
-    console.log(newCompanyData);
+    const isValidEmail = emailRegex.test(companyData.companyEmail);
+    const isPasswordStrong =
+      checkPasswordStrength(companyData.password) !== "weak" || "medium";
+
+    if (!isValidEmail) {
+      toast.error("Please enter a valid company email.");
+      return;
+    }
+
+    if (!isPasswordStrong) {
+      toast.error("Password is too weak. Use a stronger password.");
+      return;
+    }
+
+    if (companyData.password !== companyData.confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    if (companyData.businessRegistrationNumber.length !== 15) {
+      toast.error("Business registration number must be 15 digits.");
+      return;
+    }
+    if (companyData.businessRegistrationNumber.includes("000000000000000")) {
+      toast.error("Invalid business registration number.");
+      return;
+    }
+    if (companyData.businessRegistrationNumber.includes("111111111111111")) {
+      toast.error("Invalid business registration number.");
+      return;
+    }
+    if (companyData.businessRegistrationNumber.includes("222222222222222")) {
+      toast.error("Invalid business registration number.");
+      return;
+    }
+    if (companyData.businessRegistrationNumber.includes("333333333333333")) {
+      toast.error("Invalid business registration number.");
+      return;
+    }
+    if (companyData.businessRegistrationNumber.includes("444444444444444")) {
+      toast.error("Invalid business registration number.");
+      return;
+    }
+
+    if (companyData.companyName.length < 5) {
+      toast.error("Company name must be at least 5 characters long.");
+      return;
+    }
+    if (companyData.adminContactName.trim() === "") {
+      toast.error("Please enter admin name.");
+      return;
+    }
+    if (companyData.adminPosition.trim() === "") {
+      toast.error("Please enter your position.");
+      return;
+    }
+    if (companyData.adminPosition.trim() === "") {
+      toast.error("Please enter your position.");
+      return;
+    }
+
+    dispatch(registerCompany({ company: newCompanyData, navigate }));
 
     setCompanyData({
       companyName: "",
@@ -213,6 +357,12 @@ function Registration() {
     });
   }
 
+  // Active tab styles
+  const login_page_tab_active = {
+    color: theme ? "#000" : "#fff",
+    borderBottom: `2px solid ${theme ? "#000" : "#fff"}`,
+  };
+
   return (
     <div className="registration-container">
       {/* Hero Section */}
@@ -224,7 +374,10 @@ function Registration() {
             className="registration-hero-image"
           />
         </div>
-        <div className="registration-hero-overlay"></div>
+        <div
+          className="registration-hero-overlay"
+          style={{ background: theme && "rgba(2, 12, 29, 0.664)" }}
+        ></div>
         <div className="registration-hero-content">
           <h2 className="registration-hero-title">
             {activeTab === "signup"
@@ -244,7 +397,10 @@ function Registration() {
       </div>
 
       {/* Form Section */}
-      <div className="registration-form-section">
+      <div
+        className="registration-form-section mt-20"
+        style={{ background: !theme && "#1e2939" }}
+      >
         <div className="registration-form-container">
           {/* Logo Section */}
           <div className="flex flex-col items-center justify-center text-center space-y-4">
@@ -253,42 +409,63 @@ function Registration() {
               alt="FundHive Logo"
               className="w-[120px]"
             />
-            <h1 className="text-2xl font-semibold">Sign up to your account</h1>
+            <h1
+              className="text-2xl font-semibold"
+              style={{ color: !theme && "#fff" }}
+            >
+              Sign up to your account
+            </h1>
           </div>
 
           {/* Tab Section */}
           <div className="registration-tab-section">
-            <div className="registration-tab-container">
+            <div
+              className="registration-tab-container"
+              style={{ borderBottom: !theme && "1px solid #333" }}
+            >
+              {/* Sign Up Tab */}
               <button
-                className={`registration-tab-button ${
-                  activeTab === "signup" ? "registration-tab-active" : ""
-                }`}
+                style={{
+                  color: !theme ? "#fff" : "#000",
+                  ...(activeTab === "signup" && login_page_tab_active),
+                }}
+                className="registration-tab-button"
                 onClick={() => handleTabClick("signup")}
                 data-tab="signup"
               >
                 <i className="fas fa-user-plus icon-before-registration"></i>{" "}
                 Sign Up
               </button>
+
+              {/* Admin Login Tab */}
               <button
-                className={`registration-tab-button ${
-                  activeTab === "admin-login" ? "registration-tab-active" : ""
-                }`}
+                style={{
+                  color: !theme ? "#ccc" : "#000",
+                  ...(activeTab === "admin-login" && login_page_tab_active),
+                }}
+                className="registration-tab-button"
                 onClick={() => handleTabClick("admin-login")}
                 data-tab="admin-login"
               >
                 <i className="fas fa-shield-alt icon-before-registration"></i>{" "}
-                Admin Login
+                Admin
               </button>
+
+              {/* Company Register Tab */}
               <button
-                className={`registration-tab-button ${
-                  activeTab === "company-register"
-                    ? "registration-tab-active"
-                    : ""
-                }`}
+                style={{
+                  color: !theme ? "#ccc" : "#000",
+                  ...(activeTab === "company-register" &&
+                    login_page_tab_active),
+                }}
+                className="registration-tab-button"
                 onClick={() => handleTabClick("company-register")}
                 data-tab="company-register"
               >
-                <i className="fas fa-building icon-before-registration"></i>{" "}
+                <i
+                  className="fas fa-building icon-before-registration"
+                  style={{ color: !theme ? "#ccc" : "#000" }}
+                ></i>{" "}
                 Company
               </button>
             </div>
@@ -302,11 +479,25 @@ function Registration() {
             }`}
             id="signup-form"
           >
+            {/* Full Name Input */}
             <div className="registration-input-group">
-              <label className="registration-input-label">Full Name</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Full Name
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-user registration-input-icon"></i>
+                <i
+                  className="fas fa-user registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   name="fullName"
                   className="registration-input"
@@ -318,30 +509,61 @@ function Registration() {
               </div>
             </div>
 
+            {/* Email Address Input */}
             <div className="registration-input-group">
-              <label className="registration-input-label">Email Address</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Email Address
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-envelope registration-input-icon"></i>
+                <i
+                  className="fas fa-envelope registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: emailValid
+                      ? !theme
+                        ? "#00ff00"
+                        : "#00ff00"
+                      : !theme
+                      ? "#ff0000"
+                      : "#ff0000",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="email"
                   name="email"
                   className="registration-input"
                   placeholder="Enter your email"
                   value={userData.email}
                   onChange={handleEmailChange}
-                  style={{
-                    borderColor: emailValid ? "#00ff00" : "#ff0000",
-                  }}
                   required
                 />
               </div>
             </div>
 
+            {/* Username Input */}
             <div className="registration-input-group">
-              <label className="registration-input-label">Username</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Username
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-at registration-input-icon"></i>
+                <i
+                  className="fas fa-at registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   name="username"
                   className="registration-input"
@@ -353,11 +575,25 @@ function Registration() {
               </div>
             </div>
 
+            {/* Password Input */}
             <div className="registration-input-group">
-              <label className="registration-input-label">Password</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Password
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-lock registration-input-icon"></i>
+                <i
+                  className="fas fa-lock registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type={showPassword ? "text" : "password"}
                   name="password"
                   className="registration-input"
@@ -375,9 +611,11 @@ function Registration() {
                     className={`fas ${
                       showPassword ? "fa-eye-slash" : "fa-eye"
                     } registration-input-icon-eye`}
+                    style={{ color: !theme && "#fff" }}
                   ></i>
                 </button>
               </div>
+              {/* Password Strength Indicator */}
               <div className="registration-password-strength-indicator">
                 <div
                   className="registration-strength-bar"
@@ -400,7 +638,10 @@ function Registration() {
                         : "#00ff00",
                   }}
                 ></div>
-                <span className="registration-strength-text">
+                <span
+                  className="registration-strength-text"
+                  style={{ color: !theme && "#fff" }}
+                >
                   {passwordStrength === "normal"
                     ? "Normal"
                     : passwordStrength === "weak"
@@ -412,13 +653,25 @@ function Registration() {
               </div>
             </div>
 
+            {/* Confirm Password Input */}
             <div className="registration-input-group">
-              <label className="registration-input-label">
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
                 Confirm Password
               </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-lock registration-input-icon"></i>
+                <i
+                  className="fas fa-lock registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="password"
                   name="confirmPassword"
                   className="registration-input"
@@ -430,6 +683,7 @@ function Registration() {
               </div>
             </div>
 
+            {/* Terms & Conditions Checkbox */}
             <div className="registration-remember-forgot">
               <div className="registration-remember-me">
                 <input
@@ -440,35 +694,81 @@ function Registration() {
                   onChange={handleUserInputChange}
                   required
                 />
-                <label className="registration-checkbox-label">
+                <label
+                  className="registration-checkbox-label"
+                  style={{ color: !theme && "#fff" }}
+                >
                   I agree to the Terms & Conditions
                 </label>
               </div>
             </div>
 
-            <button type="submit" className="registration-submit-button">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="registration-submit-button"
+              style={{
+                backgroundColor: !theme && "#fff",
+                color: !theme && "#1f2937",
+                borderColor: !theme && "#ccc",
+              }}
+            >
               Create My FundHive Account
             </button>
 
+            {/* Divider */}
             <div className="registration-divider">
               <div className="registration-divider-line"></div>
-              <span className="registration-divider-text">
+              <span
+                className="registration-divider-text"
+                style={{
+                  color: !theme && "#fff",
+                  backgroundColor: !theme && "#1f2937",
+                }}
+              >
                 Or continue with
               </span>
             </div>
 
+            {/* Social Buttons */}
             <div className="registration-social-buttons">
-              <button type="button" className="registration-social-button">
+              <button
+                onClick={handleGoogleAuth}
+                type="button"
+                className="registration-social-button"
+                style={{
+                  backgroundColor: !theme && "#1f2937",
+                  color: !theme && "#fff",
+                  borderColor: !theme && "#ccc",
+                }}
+              >
                 <i className="fab fa-google"></i>
               </button>
-              <button type="button" className="registration-social-button">
+              <button
+                onClick={handleFacebookAuth}
+                type="button"
+                className="registration-social-button"
+                style={{
+                  backgroundColor: !theme && "#1f2937",
+                  color: !theme && "#fff",
+                  borderColor: !theme && "#ccc",
+                }}
+              >
                 <i className="fab fa-facebook"></i>
               </button>
             </div>
 
-            <p className="registration-signup-text">
+            {/* Login Link */}
+            <p
+              className="registration-signup-text"
+              style={{ color: !theme && "#fff" }}
+            >
               Already with us?
-              <Link to={"/sign-in"} className="registration-signup-link">
+              <Link
+                to={"/sign-in"}
+                className="registration-signup-link"
+                style={{ color: !theme && "#fff" }}
+              >
                 Log In
               </Link>
             </p>
@@ -483,12 +783,23 @@ function Registration() {
             id="admin-login-form"
           >
             <div className="registration-input-group">
-              <label className="registration-input-label">
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
                 Admin Email or Username
               </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-user registration-input-icon"></i>
+                <i
+                  className="fas fa-user registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   name="emailOrUsername"
                   className="registration-input"
@@ -501,10 +812,23 @@ function Registration() {
             </div>
 
             <div className="registration-input-group">
-              <label className="registration-input-label">Password</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Password
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-lock registration-input-icon"></i>
+                <i
+                  className="fas fa-lock registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type={showPassword ? "text" : "password"}
                   name="password"
                   className="registration-input"
@@ -522,18 +846,30 @@ function Registration() {
                     className={`fas ${
                       showPassword ? "fa-eye-slash" : "fa-eye"
                     } registration-input-icon-eye`}
+                    style={{ color: !theme && "#fff" }}
                   ></i>
                 </button>
               </div>
             </div>
 
             <div className="registration-input-group">
-              <label className="registration-input-label">
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
                 Verification Code
               </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-shield-alt registration-input-icon"></i>
+                <i
+                  className="fas fa-shield-alt registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   name="verificationCode"
                   className="registration-input"
@@ -545,13 +881,28 @@ function Registration() {
               </div>
             </div>
 
-            <button type="submit" className="registration-submit-button">
+            <button
+              type="submit"
+              className="registration-submit-button"
+              style={{
+                backgroundColor: !theme && "#fff",
+                color: !theme && "#1f2937",
+                borderColor: !theme && "#ccc",
+              }}
+            >
               Admin Login
             </button>
 
-            <p className="registration-signup-text">
+            <p
+              className="registration-signup-text"
+              style={{ color: !theme && "#fff" }}
+            >
               Already with us?
-              <Link to={"/sign-in"} className="registration-signup-link">
+              <Link
+                to={"/sign-in"}
+                className="registration-signup-link"
+                style={{ color: !theme && "#fff" }}
+              >
                 Log In
               </Link>
             </p>
@@ -566,10 +917,23 @@ function Registration() {
             id="company-register-form"
           >
             <div className="registration-input-group">
-              <label className="registration-input-label">Company Name</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Company Name
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-building registration-input-icon"></i>
+                <i
+                  className="fas fa-building registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   name="companyName"
                   className="registration-input"
@@ -582,10 +946,23 @@ function Registration() {
             </div>
 
             <div className="registration-input-group">
-              <label className="registration-input-label">Company Email</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Company Email
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-envelope registration-input-icon"></i>
+                <i
+                  className="fas fa-envelope registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="email"
                   name="companyEmail"
                   className="registration-input"
@@ -598,12 +975,23 @@ function Registration() {
             </div>
 
             <div className="registration-input-group">
-              <label className="registration-input-label">
-                Business Registration Number (Optional)
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Business Registration Number
               </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-id-card registration-input-icon"></i>
+                <i
+                  className="fas fa-id-card registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   name="businessRegistrationNumber"
                   className="registration-input"
@@ -615,12 +1003,23 @@ function Registration() {
             </div>
 
             <div className="registration-input-group">
-              <label className="registration-input-label">
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
                 Admin Contact Name
               </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-user registration-input-icon"></i>
+                <i
+                  className="fas fa-user registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   name="adminContactName"
                   className="registration-input"
@@ -633,10 +1032,23 @@ function Registration() {
             </div>
 
             <div className="registration-input-group">
-              <label className="registration-input-label">Admin Position</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Admin Position
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-briefcase registration-input-icon"></i>
+                <i
+                  className="fas fa-briefcase registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="text"
                   name="adminPosition"
                   className="registration-input"
@@ -649,10 +1061,23 @@ function Registration() {
             </div>
 
             <div className="registration-input-group">
-              <label className="registration-input-label">Password</label>
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
+                Password
+              </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-lock registration-input-icon"></i>
+                <i
+                  className="fas fa-lock registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type={showPassword ? "text" : "password"}
                   name="password"
                   className="registration-input"
@@ -670,18 +1095,30 @@ function Registration() {
                     className={`fas ${
                       showPassword ? "fa-eye-slash" : "fa-eye"
                     } registration-input-icon-eye`}
+                    style={{ color: !theme && "#fff" }}
                   ></i>
                 </button>
               </div>
             </div>
 
             <div className="registration-input-group">
-              <label className="registration-input-label">
+              <label
+                className="registration-input-label"
+                style={{ color: !theme && "#fff" }}
+              >
                 Confirm Password
               </label>
               <div className="registration-input-wrapper">
-                <i className="fas fa-lock registration-input-icon"></i>
+                <i
+                  className="fas fa-lock registration-input-icon"
+                  style={{ color: !theme && "#fff" }}
+                ></i>
                 <input
+                  style={{
+                    color: !theme && "#fff",
+                    borderColor: !theme && "#ccc",
+                    backgroundColor: !theme && "#1f2937",
+                  }}
                   type="password"
                   name="confirmPassword"
                   className="registration-input"
@@ -703,18 +1140,37 @@ function Registration() {
                   onChange={handleCompanyInputChange}
                   required
                 />
-                <label className="registration-checkbox-label">
+                <label
+                  className="registration-checkbox-label"
+                  style={{ color: !theme && "#fff" }}
+                >
                   I agree to the Company Terms & Agreement
                 </label>
               </div>
             </div>
 
-            <button type="submit" className="registration-submit-button">
+            <button
+              type="submit"
+              className="registration-submit-button"
+              style={{
+                backgroundColor: !theme && "#fff",
+                color: !theme && "#1f2937",
+                borderColor: !theme && "#ccc",
+              }}
+            >
               Register My Company
             </button>
-            <p className="registration-signup-text">
+
+            <p
+              className="registration-signup-text"
+              style={{ color: !theme && "#fff" }}
+            >
               Already with us?
-              <Link to={"/sign-in"} className="registration-signup-link">
+              <Link
+                to={"/sign-in"}
+                className="registration-signup-link"
+                style={{ color: !theme && "#fff" }}
+              >
                 Log In
               </Link>
             </p>

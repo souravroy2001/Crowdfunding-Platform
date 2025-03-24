@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import { useParams, useLocation, Navigate, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  useParams,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { addDonation } from "../redux/features/donationsSlice";
 import { updateProjectFunding } from "../redux/features/projectsSlice";
@@ -10,10 +15,18 @@ const DonationForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-    const theme = useSelector((state) => state.theme.darkMode);
+  const theme = useSelector((state) => state.theme.darkMode);
   const [donationAmount, setDonationAmount] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [localProject, setLocalProject] = useState(location.state?.project);
+  const { user } = useSelector((state) => state.auth);
+  const { admin } = useSelector((state) => state.admin);
+  const { company } = useSelector((state) => state.company);
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    setIsLogin(!!user || !!admin || !!company);
+  }, [user, admin, company]);
 
   // Get project from navigation state
   const project = location.state?.project;
@@ -29,6 +42,11 @@ const DonationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const amount = Number(donationAmount);
+
+    if (!isLogin) {
+      toast.error("Please login to continue");
+      return;
+    }
 
     if (!amount || amount <= 0) {
       toast.error("Please enter a valid donation amount ");
@@ -53,18 +71,20 @@ const DonationForm = () => {
       };
 
       // Update Redux state first
-      dispatch(updateProjectFunding({
-        projectId: project.id,
-        amount: amount
-      }));
+      dispatch(
+        updateProjectFunding({
+          projectId: project.id,
+          amount: amount,
+        })
+      );
 
       // Add donation record
       dispatch(addDonation(donation));
 
       // Update local state for immediate UI feedback
-      setLocalProject(prev => ({
+      setLocalProject((prev) => ({
         ...prev,
-        raised: prev.raised + amount
+        raised: prev.raised + amount,
       }));
 
       // Show success message
@@ -85,13 +105,17 @@ const DonationForm = () => {
   };
 
   return (
-    <div className={`min-h-screen mt-[80px] transition-colors duration-300 ${
-      theme ? "bg-gray-50" : "bg-gray-900"
-    }`}>
+    <div
+      className={`min-h-screen mt-[80px] transition-colors duration-300 ${
+        theme ? "bg-gray-50" : "bg-gray-900"
+      }`}
+    >
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <div className={`rounded-2xl overflow-hidden ${
-          theme ? "bg-white shadow-xl" : "bg-gray-800 shadow-gray-700/50"
-        }`}>
+        <div
+          className={`rounded-2xl overflow-hidden ${
+            theme ? "bg-white shadow-xl" : "bg-gray-800 shadow-gray-700/50"
+          }`}
+        >
           {/* Hero Section with Image */}
           <div className="relative h-80">
             <img
@@ -112,18 +136,30 @@ const DonationForm = () => {
           <div className="p-8">
             {/* Project Details */}
             <div className="mb-8 space-y-4">
-              <p className={`text-lg ${theme ? "text-gray-600" : "text-gray-300"}`}>
+              <p
+                className={`text-lg ${
+                  theme ? "text-gray-600" : "text-gray-300"
+                }`}
+              >
                 {project.description}
               </p>
               <div className="flex flex-wrap gap-3">
-                <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  theme ? "bg-gray-100 text-gray-800" : "bg-gray-700 text-gray-200"
-                }`}>
+                <span
+                  className={`px-4 py-2 rounded-full text-sm font-medium ${
+                    theme
+                      ? "bg-gray-100 text-gray-800"
+                      : "bg-gray-700 text-gray-200"
+                  }`}
+                >
                   {project.category}
                 </span>
-                <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  theme ? "bg-gray-100 text-gray-800" : "bg-gray-700 text-gray-200"
-                }`}>
+                <span
+                  className={`px-4 py-2 rounded-full text-sm font-medium ${
+                    theme
+                      ? "bg-gray-100 text-gray-800"
+                      : "bg-gray-700 text-gray-200"
+                  }`}
+                >
                   {project.daysLeft} days left
                 </span>
               </div>
@@ -133,26 +169,34 @@ const DonationForm = () => {
             <div className="mb-8">
               <div className="flex justify-between items-end mb-2">
                 <div>
-                  <p className={`text-sm font-medium ${
-                    theme ? "text-gray-600" : "text-gray-400"
-                  }`}>
+                  <p
+                    className={`text-sm font-medium ${
+                      theme ? "text-gray-600" : "text-gray-400"
+                    }`}
+                  >
                     Raised
                   </p>
-                  <p className={`text-2xl font-bold ${
-                    theme ? "text-gray-900" : "text-white"
-                  }`}>
+                  <p
+                    className={`text-2xl font-bold ${
+                      theme ? "text-gray-900" : "text-white"
+                    }`}
+                  >
                     ${localProject.raised.toLocaleString()}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className={`text-sm font-medium ${
-                    theme ? "text-gray-600" : "text-gray-400"
-                  }`}>
+                  <p
+                    className={`text-sm font-medium ${
+                      theme ? "text-gray-600" : "text-gray-400"
+                    }`}
+                  >
                     Goal
                   </p>
-                  <p className={`text-2xl font-bold ${
-                    theme ? "text-gray-900" : "text-white"
-                  }`}>
+                  <p
+                    className={`text-2xl font-bold ${
+                      theme ? "text-gray-900" : "text-white"
+                    }`}
+                  >
                     ${localProject.goal.toLocaleString()}
                   </p>
                 </div>
@@ -165,9 +209,11 @@ const DonationForm = () => {
                   className="h-full bg-gradient-to-r from-[#00bfa5] to-[#009688] transition-all duration-300"
                 ></div>
               </div>
-              <p className={`mt-2 text-center text-sm ${
-                theme ? "text-gray-600" : "text-gray-400"
-              }`}>
+              <p
+                className={`mt-2 text-center text-sm ${
+                  theme ? "text-gray-600" : "text-gray-400"
+                }`}
+              >
                 ${remainingAmount.toLocaleString()} still needed
               </p>
             </div>
@@ -185,9 +231,13 @@ const DonationForm = () => {
                 </label>
                 <div className="relative mt-2">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className={`text-lg ${
-                      theme ? "text-gray-500" : "text-gray-400"
-                    }`}>$</span>
+                    <span
+                      className={`text-lg ${
+                        theme ? "text-gray-500" : "text-gray-400"
+                      }`}
+                    >
+                      $
+                    </span>
                   </div>
                   <input
                     type="number"
@@ -205,9 +255,13 @@ const DonationForm = () => {
                     placeholder="Enter amount"
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <span className={`text-sm ${
-                      theme ? "text-gray-500" : "text-gray-400"
-                    }`}>USD</span>
+                    <span
+                      className={`text-sm ${
+                        theme ? "text-gray-500" : "text-gray-400"
+                      }`}
+                    >
+                      USD
+                    </span>
                   </div>
                 </div>
               </div>
@@ -227,18 +281,32 @@ const DonationForm = () => {
 
             {/* Security Info */}
             <div className="mt-8 border-t pt-6 space-y-4">
-              <div className={`flex items-center justify-center gap-2 ${
-                theme ? "text-gray-600" : "text-gray-400"
-              }`}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+              <div
+                className={`flex items-center justify-center gap-2 ${
+                  theme ? "text-gray-600" : "text-gray-400"
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <span className="text-sm">Secure payment processing</span>
               </div>
-              <p className={`text-center text-sm ${
-                theme ? "text-gray-500" : "text-gray-400"
-              }`}>
-                You'll receive a confirmation email once your donation is processed
+              <p
+                className={`text-center text-sm ${
+                  theme ? "text-gray-500" : "text-gray-400"
+                }`}
+              >
+                You'll receive a confirmation email once your donation is
+                processed
               </p>
             </div>
           </div>

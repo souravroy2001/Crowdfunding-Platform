@@ -9,12 +9,12 @@ import EditCampaign from "./EditCampaign";
 import CampaignDetail from "./CampaignDetail";
 
 const AdminCampaigns = () => {
-  const toggleTheme = useSelector((state) => state.theme.toggleTheme);
+  const toggleTheme = useSelector((state) => state.theme.darkMode);
 
   return (
     <div
       className={`min-h-screen ${
-        toggleTheme ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-800"
+        !toggleTheme ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-800"
       }`}
     >
       <Routes>
@@ -25,7 +25,7 @@ const AdminCampaigns = () => {
               {/* Admin Header */}
               <div
                 className={`p-6 ${
-                  toggleTheme ? "bg-gray-800" : "bg-white"
+                  !toggleTheme ? "bg-gray-800" : "bg-white"
                 } shadow-md mb-6`}
               >
                 <div className="max-w-7xl mx-auto">
@@ -33,20 +33,22 @@ const AdminCampaigns = () => {
                     <div className="flex items-center gap-4">
                       <div
                         className={`p-3 rounded-lg ${
-                          toggleTheme ? "bg-gray-700" : "bg-gray-100"
+                          !toggleTheme ? "bg-gray-700" : "bg-gray-100"
                         }`}
                       >
                         <FaChartLine
                           className={`text-xl ${
-                            toggleTheme ? "text-[#bb86fc]" : "text-[#00bfa5]"
+                            toggleTheme ? "text-[#00bfa5]" : "text-[#00bfa5]"
                           }`}
                         />
                       </div>
                       <div>
-                        <h1 className="text-2xl font-bold">Campaign Management</h1>
+                        <h1 className="text-2xl font-bold">
+                          Campaign Management
+                        </h1>
                         <p
                           className={`text-sm ${
-                            toggleTheme ? "text-gray-400" : "text-gray-600"
+                            !toggleTheme ? "text-gray-400" : "text-gray-600"
                           }`}
                         >
                           Manage and monitor all fundraising campaigns
@@ -56,8 +58,8 @@ const AdminCampaigns = () => {
                     <Link
                       to="create"
                       className={`inline-flex items-center px-4 py-2 rounded-lg ${
-                        toggleTheme
-                          ? "bg-[#bb86fc] hover:bg-[#9c64fb]"
+                        !toggleTheme
+                          ? "bg-[#00bfa5] hover:bg-[#009688]"
                           : "bg-[#00bfa5] hover:bg-[#009688]"
                       } text-white transition-colors duration-300`}
                     >

@@ -14,23 +14,47 @@ import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const location = useLocation();
-  const toggleTheme = useSelector((state) => state.theme.toggleTheme);
+  const toggleTheme = useSelector((state) => state.theme.darkMode);
 
   const navItems = [
     { path: "/admin", icon: <MdDashboard size={24} />, label: "Dashboard" },
-    { path: "/admin/campaigns", icon: <MdCampaign size={24} />, label: "Campaigns" },
-    { path: "/admin/companies", icon: <MdBusiness size={24} />, label: "Companies" },
-    { path: "/admin/donations", icon: <MdAttachMoney size={24} />, label: "Donations" },
+    {
+      path: "/admin/campaigns",
+      icon: <MdCampaign size={24} />,
+      label: "Campaigns",
+    },
+    {
+      path: "/admin/companies",
+      icon: <MdBusiness size={24} />,
+      label: "Companies",
+    },
+    {
+      path: "/admin/donations",
+      icon: <MdAttachMoney size={24} />,
+      label: "Donations",
+    },
     { path: "/admin/users", icon: <MdPeople size={24} />, label: "Users" },
-    { path: "/admin/analytics", icon: <MdAnalytics size={24} />, label: "Analytics" },
-    { path: "/admin/reports", icon: <MdDescription size={24} />, label: "Reports" },
-    { path: "/admin/settings", icon: <MdSettings size={24} />, label: "Settings" },
+    {
+      path: "/admin/analytics",
+      icon: <MdAnalytics size={24} />,
+      label: "Analytics",
+    },
+    {
+      path: "/admin/reports",
+      icon: <MdDescription size={24} />,
+      label: "Reports",
+    },
+    {
+      path: "/admin/settings",
+      icon: <MdSettings size={24} />,
+      label: "Settings",
+    },
   ];
 
   return (
     <aside
       className={`fixed left-0 top-0 h-screen w-64 ${
-        toggleTheme ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"
+        !toggleTheme ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
       } shadow-xl z-50 transition-colors duration-300`}
     >
       <div className="flex items-center justify-center h-16 border-b border-gray-200 dark:border-gray-700">
@@ -46,11 +70,11 @@ const Sidebar = () => {
               to={item.path}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                 isActive
-                  ? toggleTheme
-                    ? "bg-[#bb86fc] text-white shadow-lg"
+                  ? !toggleTheme
+                    ? "bg-[#00bfa5] text-white shadow-lg"
                     : "bg-[#00bfa5] text-white shadow-lg"
                   : `hover:bg-gray-100 hover:shadow-md ${
-                      toggleTheme
+                      !toggleTheme
                         ? "hover:bg-gray-800 text-gray-300"
                         : "hover:bg-gray-100 text-gray-700"
                     }`

@@ -1,14 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router";
-import { LuCloudMoon } from "react-icons/lu";
+import { LuCloudMoon, LuLayoutDashboard, LuLogOut } from "react-icons/lu";
 import { LuCloudSun } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/features/themeSlice";
+import { logoutUser } from "../redux/features/authSlice";
+import { logoutAdmin } from "../redux/features/adminSlice";
+import { logoutCompany } from "../redux/features/companySlice";
 
 function Navbar() {
   const [isActive, setIsActive] = useState(false);
   const theme = useSelector((state) => state.theme.darkMode);
   const dispatch = useDispatch();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { admin } = useSelector((state) => state.admin);
+  const { company } = useSelector((state) => state.company);
+  const { user } = useSelector((state) => state.auth);
+  const [logUser, setLogUser] = useState(null);
+
+  useEffect(() => {
+    setIsLoggedIn(!!admin || !!company || !!user);
+    if (admin) {
+      setLogUser("admin");
+    } else if (company) {
+      setLogUser("company");
+    } else if (user) {
+      setLogUser("user-dashboard");
+    }
+  }, [admin, company, user]);
+
+  function handleLogout() {
+    if (admin) {
+      dispatch(logoutAdmin());
+    } else if (company) {
+      dispatch(logoutCompany());
+    } else if (user) {
+      dispatch(logoutUser());
+    }
+  }
 
   return (
     <header
@@ -52,16 +81,47 @@ function Navbar() {
             </NavLink>
           </div>
           <div className="nav-actions">
-            <Link
-              to={"/sign-in"}
-              style={{ color: theme ? "#000" : "#fff" }}
-              className="sign-in"
-            >
-              Sign in
-            </Link>
-            <Link to={"/register"} className="start-campaign">
-              Start Campaign
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <button
+                  onClick={handleLogout}
+                  className={`flex cursor-pointer items-center text-sm font-medium  gap-1.5 ${
+                    theme
+                      ? "text-gray-900 hover:text-gray-800"
+                      : "text-white hover:text-gray-100"
+                  }`}
+                >
+                  {" "}
+                  <LuLogOut /> Logout
+                </button>
+                <Link to={logUser}>
+                  <button
+                    className={`flex cursor-pointer items-center text-sm font-medium  gap-1.5 ${
+                      theme
+                        ? "text-white hover:text-gray-50 rounded-2xl bg-gray-500 p-4"
+                        : "text-gray-900 hover:text-gray-800 rounded-2xl bg-gray-100 p-4"
+                    }`}
+                  >
+                    {" "}
+                    <LuLayoutDashboard /> Dashboard
+                  </button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to={"/sign-in"}
+                  style={{ color: theme ? "#000" : "#fff" }}
+                  className="sign-in"
+                >
+                  Sign in
+                </Link>
+                <Link to={"/register"} className="start-campaign">
+                  Start Campaign
+                </Link>
+              </>
+            )}
+
             <button
               style={{ background: "none", border: "none" }}
               onClick={() => dispatch(toggleTheme())}

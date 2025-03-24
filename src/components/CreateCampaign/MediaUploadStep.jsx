@@ -8,9 +8,43 @@ function MediaUploadStep() {
   const media = watch("media");
   const theme = useSelector((state) => state.theme.darkMode);
 
+  // Convert File to URL
+  const createFileURL = (file) => URL.createObjectURL(file);
+
+  // Compare two images (checks byte data)
+  const areImagesIdentical = async (file1, file2) => {
+    const buffer1 = await file1.arrayBuffer();
+    const buffer2 = await file2.arrayBuffer();
+
+    return (
+      buffer1.byteLength === buffer2.byteLength &&
+      new Uint8Array(buffer1).every(
+        (val, index) => val === new Uint8Array(buffer2)[index]
+      )
+    );
+  };
+
+  // Handle file drop
   const onDrop = useCallback(
-    (acceptedFiles) => {
-      setValue("media", [...media, ...acceptedFiles]);
+    async (acceptedFiles) => {
+      const newFiles = [];
+
+      for (const file of acceptedFiles) {
+        let isDuplicate = false;
+
+        for (const existingFile of media) {
+          if (await areImagesIdentical(existingFile, file)) {
+            isDuplicate = true;
+            break;
+          }
+        }
+
+        if (!isDuplicate) {
+          newFiles.push(Object.assign(file, { preview: createFileURL(file) }));
+        }
+      }
+
+      setValue("media", [...media, ...newFiles]);
     },
     [media, setValue]
   );

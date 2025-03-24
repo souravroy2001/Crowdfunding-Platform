@@ -1,6 +1,7 @@
 // Import the necessary Firebase modules
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 import { getFirestore, collection, getDocs, addDoc, Timestamp, doc, getDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
@@ -8,16 +9,21 @@ const firebaseConfig = {
   apiKey: "AIzaSyCBgE8o9wDZ6Di1RwbIHAW-TFcwP4K2bVY",
   authDomain: "fundhive-20b10.firebaseapp.com",
   projectId: "fundhive-20b10",
-  storageBucket: "fundhive-20b10.appspot.com",  // Fixed storage bucket URL
+  storageBucket: "fundhive-20b10.firebasestorage.app",
   messagingSenderId: "884348661899",
-  appId: "1:884348661899:web:68ecfc079a122d6a87a48e"
+  appId: "1:884348661899:web:68ecfc079a122d6a87a48e",
+  databaseURL: "https://fundhive-20b10-default-rtdb.firebaseio.com/",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 const auth = getAuth(app);
-const eventsCollectionRef = collection(db, "events");
+export const database = getDatabase(app);
+const firestore = getFirestore(app); // Renamed `db` to `firestore`
+
+// Firestore References
+const usersCollection = collection(firestore, "users");
+const eventsCollectionRef = collection(firestore, "events");
 
 // Providers for social login
 const googleProvider = new GoogleAuthProvider();
@@ -33,10 +39,10 @@ export const getEvents = async (setEvents) => {
       const end = new Date(data.end.seconds * 1000);
       return {
         id: doc.id,
-        title: data.task || "Untitled Task",  // Default title if task is missing
-        description: data.description || "No description",  // Default value
-        priority: data.priority || "Medium", // Default priority
-        creator: data.creator || "Unknown",  // Default creator
+        title: data.task || "Untitled Task",
+        description: data.description || "No description",
+        priority: data.priority || "Medium",
+        creator: data.creator || "Unknown",
         start,
         end,
       };
@@ -60,8 +66,8 @@ export const addEvent = async (newEvent) => {
       description: newEvent.description || "No description",
       priority: newEvent.priority || "Medium",
       creator: newEvent.creator || "Unknown",
-      start: Timestamp.fromDate(new Date(newEvent.start)), // Store as Firestore Timestamp
-      end: Timestamp.fromDate(new Date(newEvent.end)),     // Store as Firestore Timestamp
+      start: Timestamp.fromDate(new Date(newEvent.start)),
+      end: Timestamp.fromDate(new Date(newEvent.end)),
     });
     console.log("Event added with ID: ", docRef.id);
   } catch (error) {
@@ -70,4 +76,4 @@ export const addEvent = async (newEvent) => {
 };
 
 // Export Firebase-related modules
-export { app, auth, db, googleProvider, facebookProvider };
+export { app, auth, firestore, googleProvider, facebookProvider, usersCollection, addDoc, getDocs };

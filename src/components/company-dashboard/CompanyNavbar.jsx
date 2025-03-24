@@ -1,9 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { LuCloudMoon, LuCloudSun } from "react-icons/lu";
+import { LuCloudMoon, LuCloudSun, LuLogOut } from "react-icons/lu";
 import { FaBell, FaPlus, FaChartLine, FaUsers } from "react-icons/fa";
 import { toggleTheme } from "../../redux/features/themeSlice";
+import { logoutCompany } from "../../redux/features/companySlice";
 
 const CompanyNavbar = () => {
   const theme = useSelector((state) => state.theme.darkMode);
@@ -77,6 +78,17 @@ const CompanyNavbar = () => {
             >
               <FaBell size={20} />
             </Link>
+            <button
+              onClick={() => dispatch(logoutCompany())}
+              className={`flex cursor-pointer items-center text-sm font-medium  gap-1.5 ${
+                theme
+                  ? "text-gray-900 hover:text-gray-800"
+                  : "text-white hover:text-gray-100"
+              }`}
+            >
+              {" "}
+              <LuLogOut /> Logout
+            </button>
 
             <Link
               to="/company/create-campaign"

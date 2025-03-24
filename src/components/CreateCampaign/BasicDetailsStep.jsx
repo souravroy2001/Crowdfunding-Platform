@@ -14,10 +14,13 @@ function BasicDetailsStep() {
 
   const handleAddTag = () => {
     const input = document.getElementById("tag-input");
-    const newTag = input.value.trim();
+    const newTags = input.value
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag !== "" && !tags.includes(tag));
 
-    if (newTag && !tags.includes(newTag)) {
-      setValue("tags", [...tags, newTag]);
+    if (newTags.length > 0) {
+      setValue("tags", [...tags, ...newTags]);
       input.value = "";
     }
   };

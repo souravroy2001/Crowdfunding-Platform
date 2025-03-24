@@ -1,191 +1,75 @@
 import { auth, firestore } from "./firebase";
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithPopup,
-  updatePassword,
-  sendPasswordResetEmail,
-  sendEmailVerification,
-  signOut,
-  updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
-async function registerUser(name, email, password, role = "user") {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-
-    await updateProfile(user, { displayName: name });
-
-    const userObj = {
-      uid: user.uid,
-      name: name,
-      email: user.email,
-      createdAt: new Date().toISOString(),
-      photoURL: "",
-      bio: "",
-      following: [],
-      follow: [],
-      provider: "email&Password",
-      role: role,
-    };
-
-    await postUser(userObj);
-    alert("Registration successful!");
-    return user;
-  } catch (error) {
-    console.error("Error registering user:", error.message);
-    handleAuthError(error);
-    throw error;
-  }
-}
-
+// ✅ Function to save user data in Firestore after registration
 async function postUser(userObj) {
   try {
-    await setDoc(doc(firestore, "users", userObj.uid), userObj);
-    console.log("User data posted successfully");
+    await setDoc(doc(firestore, "users", userObj.uid), userObj, {
+      merge: true,
+    });
+    toast.success(`User registered successfully: ${userObj.fullName}`);
   } catch (error) {
-    console.error("Error posting user data:", error.message);
+    toast.error(`Error posting user data: ${error.message}`);
   }
 }
 
-async function registerWithGoogleUser() {
-  const provider = new GoogleAuthProvider();
-  return signInWithProvider(provider, "google");
+// ✅ Check if user is already registered
+async function checkUserExists(uid) {
+  const userRef = doc(firestore, "users", uid);
+  const userSnap = await getDoc(userRef);
+  return userSnap.exists();
 }
 
-async function registerWithFacebookUser() {
-  const provider = new FacebookAuthProvider();
-  return signInWithProvider(provider, "facebook");
+// 🔥 Google Register/Login
+async function registerOrLoginWithGoogle() {
+  return registerOrLoginWithProvider(new GoogleAuthProvider(), "google");
 }
 
-async function loginUser(email, password) {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-    const userDoc = await getDoc(doc(firestore, "users", user.uid));
-
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      if (userData.role === "admin") {
-        window.location.href = "/admin-dashboard";
-      } else {
-        window.location.href = "/dashboard";
-      }
-    }
-
-    alert("Login successful!");
-    return user;
-  } catch (error) {
-    console.error("Error logging in:", error.message);
-    handleAuthError(error);
-    throw error;
-  }
+// 🔥 Facebook Register/Login
+async function registerOrLoginWithFacebook() {
+  return registerOrLoginWithProvider(new FacebookAuthProvider(), "facebook");
 }
 
-async function signInWithProvider(provider, providerName) {
+// ✅ Handles both register & login
+async function registerOrLoginWithProvider(provider, providerName) {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    const userRef = doc(firestore, "users", user.uid);
-    const userSnap = await getDoc(userRef);
+    const userExists = await checkUserExists(user.uid);
 
-    if (!userSnap.exists()) {
+    if (!userExists) {
+      // Register the user
       const userObj = {
         uid: user.uid,
-        name: user.displayName || `${providerName} User`,
+        fullName: user.displayName || `${providerName} User`,
         email: user.email,
-        photoURL: user.photoURL || "",
-        createdAt: new Date().toISOString(),
-        provider: providerName,
-        bio: "",
-        following: [],
-        follow: [],
+        username: user.email.split("@")[0],
+        password: "",
+        confirmPassword: "",
+        rememberMe: false,
         role: "user",
+        provider: providerName,
+        createdAt: new Date().toISOString(),
       };
       await postUser(userObj);
+      toast.success("User registered successfully!");
+    } else {
+      toast.warning("User exists, logging in...");
     }
 
-    window.location.href = "/dashboard";
+    window.location.href = "/user-dashboard";
     return user;
   } catch (error) {
-    console.error(`Error with ${providerName} sign-in:`, error.message);
+    toast.error(`Error with ${providerName} authentication:`, error.message);
     throw error;
   }
 }
 
-async function doSignout() {
-  return signOut(auth)
-    .then(() => {
-      window.location.href = "/";
-    })
-    .catch((error) => {
-      console.error("Error signing out:", error.message);
-    });
-}
-
-async function doPasswordReset(email) {
-  return sendPasswordResetEmail(auth, email).catch((error) => {
-    console.error("Error sending password reset email:", error.message);
-    throw error;
-  });
-}
-
-async function doPasswordChange(password) {
-  if (!auth.currentUser) {
-    throw new Error("No user is currently logged in.");
-  }
-  return updatePassword(auth.currentUser, password).catch((error) => {
-    console.error("Error updating password:", error.message);
-    throw error;
-  });
-}
-
-async function doSendEmailVerification() {
-  if (!auth.currentUser) {
-    throw new Error("No user is currently logged in.");
-  }
-  return sendEmailVerification(auth.currentUser, {
-    url: `${window.location.origin}/home`,
-  }).catch((error) => {
-    console.error("Error sending email verification:", error.message);
-    throw error;
-  });
-}
-
-function handleAuthError(error) {
-  if (error.code === "auth/email-already-in-use") {
-    alert("User is already registered. Please log in.");
-  } else if (error.code === "auth/weak-password") {
-    alert("Password is too weak. Please use a stronger password.");
-  } else if (error.code === "auth/invalid-email") {
-    alert("Invalid email format. Please enter a valid email.");
-  } else {
-    alert(`Operation failed: ${error.message}`);
-  }
-}
-
-export {
-  registerUser,
-  loginUser,
-  registerWithGoogleUser,
-  registerWithFacebookUser,
-  loginWithGoogleUser,
-  loginWithFacebookUser,
-  doSignout,
-  doPasswordReset,
-  doPasswordChange,
-  doSendEmailVerification,
-};
+export { registerOrLoginWithGoogle, registerOrLoginWithFacebook };

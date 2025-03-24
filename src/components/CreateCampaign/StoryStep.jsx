@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 
 function StoryStep() {
-  const { register } = useFormContext();
+  const { register, setValue, watch } = useFormContext();
   const theme = useSelector((state) => state.theme.darkMode);
 
   return (

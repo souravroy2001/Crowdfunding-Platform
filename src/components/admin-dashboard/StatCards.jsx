@@ -1,8 +1,10 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBullhorn, faUsers, faDollarSign, faFlag } from '@fortawesome/free-solid-svg-icons';
+import { useSelector } from 'react-redux';
 
 const StatCards = () => {
+  const toggleTheme = useSelector((state) => state.theme.darkMode);
   const stats = [
     {
       title: 'Active Campaigns',
@@ -37,14 +39,24 @@ const StatCards = () => {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
       {stats.map((stat, index) => (
-        <div key={index} className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-300">
+        <div
+          key={index}
+          className={`${
+            toggleTheme ? "bg-white" : "bg-gray-800 text-white"
+          } rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-300`}
+        >
           <div className="flex items-center">
             <div className={`p-3 rounded-full ${stat.bgColor}`}>
-              <FontAwesomeIcon icon={stat.icon} className={`${stat.iconColor}`} />
+              <FontAwesomeIcon
+                icon={stat.icon}
+                className={`${stat.iconColor}`}
+              />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">{stat.title}</p>
-              <p className="text-2xl font-semibold text-gray-900">{stat.value}</p>
+              <p className="text-sm font-medium">{stat.title}</p>
+              <p className="text-2xl font-semibold">
+                {stat.value}
+              </p>
             </div>
           </div>
         </div>
