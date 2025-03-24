@@ -32,7 +32,7 @@ The UI for **FundHive** is structured to be both **user-friendly** and **interac
 - **Featured Campaigns:** Showcase trending campaigns and success stories.
 - **Donation Statistics:** Key metrics of FundHive’s impact.
 
-### 2. **Login & Registration**
+### 2. **Login & Registration** ( custom authentication using bcrypt )
 
 - **User Login:** For backers and creators to log into their accounts.
 - **User Registration:** To create a new user profile and join FundHive.
