@@ -154,7 +154,7 @@ npm run dev
 ---
 
 ## **Directory Structure**
-
+```bash
 /FundHive
 │
 ├── /node_modules           # Node.js dependencies
@@ -268,7 +268,7 @@ npm run dev
 ├── package.json            # Project dependencies
 ├── README.md               # Project documentation
 └── LICENSE                 # License file
-
+```
 ---
 
 ## **Contributing**
