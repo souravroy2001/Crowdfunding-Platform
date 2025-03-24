@@ -57,7 +57,7 @@ export const registerUser = createAsyncThunk(
 // Async function to login user
 export const loginUser = createAsyncThunk(
     "auth/login",
-    async ({ email, password, navigate }, { rejectWithValue }) => {
+    async ({ email, password, provider, navigate }, { rejectWithValue }) => {
         try {
             const querySnapshot = await getDocs(collection(firestore, "users"));
             const users = querySnapshot.docs.map((doc) => doc.data());
@@ -69,12 +69,20 @@ export const loginUser = createAsyncThunk(
                 return rejectWithValue("User not found");
             }
 
-            const passwordMatch = await bcrypt.compare(password, existingUser.password);
 
-            if (!passwordMatch) {
-                toast.error("Incorrect password!");
-                return rejectWithValue("Incorrect password");
+            if (provider === "email") {
+                if (!password) {
+                    toast.error("Password is required for email login.");
+                    return rejectWithValue("Password is required");
+                }
+
+                const passwordMatch = await bcrypt.compare(password, existingUser.password);
+                if (!passwordMatch) {
+                    toast.error("Incorrect password!");
+                    return rejectWithValue("Incorrect password");
+                }
             }
+
 
             // Store user in localStorage
             localStorage.setItem("user", JSON.stringify({ email: existingUser.email, role: existingUser.role }));

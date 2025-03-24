@@ -33,7 +33,42 @@ async function registerOrLoginWithGoogle() {
 
 // 🔥 Facebook Register/Login
 async function registerOrLoginWithFacebook() {
-  return registerOrLoginWithProvider(new FacebookAuthProvider(), "facebook");
+  try {
+    return await registerOrLoginWithProvider(
+      new FacebookAuthProvider(),
+      "facebook"
+    );
+  } catch (error) {
+    if (error.code === "auth/account-exists-with-different-credential") {
+      // The email is already registered with another provider
+      const email = error.customData?.email;
+
+      // Get the available sign-in methods for this email
+      const providers = await fetchSignInMethodsForEmail(email);
+
+      // For example: if email is registered with Google, show a message
+      const providerName =
+        providers[0] === "google.com" ? "Google" : "email/password";
+
+      throw new Error(`This email is already registered with ${providerName}.
+                      Please sign in with that method first, then you can link Facebook.`);
+    }
+
+    // Re-throw other errors
+    throw error;
+  }
+}
+
+async function logout() {
+  try {
+    await signOut(auth);
+    localStorage.removeItem("user");
+    toast.success("Logged out successfully!");
+    window.location.href = "/";
+  } catch (error) {
+    toast.error(`Logout failed: ${error.message}`);
+    throw error;
+  }
 }
 
 // ✅ Handles both register & login
@@ -64,6 +99,15 @@ async function registerOrLoginWithProvider(provider, providerName) {
       toast.warning("User exists, logging in...");
     }
 
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        email: user.email,
+        role: "user",
+        provider: providerName,
+      })
+    );
+
     window.location.href = "/user-dashboard";
     return user;
   } catch (error) {
@@ -72,4 +116,4 @@ async function registerOrLoginWithProvider(provider, providerName) {
   }
 }
 
-export { registerOrLoginWithGoogle, registerOrLoginWithFacebook };
+export { registerOrLoginWithGoogle, registerOrLoginWithFacebook, logout };

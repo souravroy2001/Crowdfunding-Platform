@@ -9,6 +9,7 @@ import {
   registerOrLoginWithFacebook,
   registerOrLoginWithGoogle,
 } from "../firebase/auth";
+import { toast } from "react-toastify";
 
 function Login() {
   const [activeTab, setActiveTab] = useState("signin");
@@ -96,6 +97,7 @@ function Login() {
       loginUser({
         email: userData.email,
         password: userData.password,
+        provider: "email",
         navigate,
       })
     );

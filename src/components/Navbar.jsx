@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { LuCloudMoon, LuLayoutDashboard, LuLogOut } from "react-icons/lu";
 import { LuCloudSun } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { logoutUser } from "../redux/features/authSlice";
 import { logoutAdmin } from "../redux/features/adminSlice";
 import { logoutCompany } from "../redux/features/companySlice";
 import { FaBell } from "react-icons/fa";
+import { logout } from "../firebase/auth";
 
 function Navbar() {
   const [isActive, setIsActive] = useState(false);
@@ -18,6 +19,13 @@ function Navbar() {
   const { company } = useSelector((state) => state.company);
   const { user } = useSelector((state) => state.auth);
   const [logUser, setLogUser] = useState(null);
+  const navigation = useNavigate();
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+
+  useEffect(() => {
+    let userInLocal = JSON.parse(localStorage.getItem("user"));
+    setIsUserAuthenticated(userInLocal);
+  }, []);
 
   useEffect(() => {
     setIsLoggedIn(!!admin || !!company || !!user);
@@ -37,7 +45,13 @@ function Navbar() {
       dispatch(logoutCompany());
     } else if (user) {
       dispatch(logoutUser());
+    } else if (
+      isUserAuthenticated.provider === "google" ||
+      isUserAuthenticated.provider === "facebook"
+    ) {
+      logout();
     }
+    navigation("/");
   }
 
   return (
