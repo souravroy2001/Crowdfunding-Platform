@@ -157,145 +157,121 @@ npm run dev
 
 /FundHive
 │
-├── /node_modules # Node.js dependencies
-├── /public # Public assets (images, icons, etc.)
+├── /node_modules           # Node.js dependencies
+├── /public                 # Public assets (images, icons, etc.)
+│   ├── index.html          # Main HTML file
+│   ├── favicon.ico         # Favicon for the website
+│   ├── logo192.png         # App logo (192x192)
+│   ├── logo512.png         # App logo (512x512)
+│   └── manifest.json       # Web app manifest
 │
 ├── /src
-│ ├── /components # Reusable components organized by feature
-│ │ │
-│ │ ├── /admin-campaigns # Admin campaign management
-│ │ │ ├── AdminCampaigns.jsx
-│ │ │ ├── CampaignDetail.jsx
-│ │ │ ├── Campaigns.jsx
-│ │ │ ├── CompaniesOverview.jsx
-│ │ │ ├── CreateCampaign.jsx
-│ │ │ └── EditCampaign.jsx
-│ │ │
-│ │ ├── /admin-dashboard # Admin analytics dashboard
-│ │ │ ├── AdminAnalytics.jsx
-│ │ │ ├── AdminCompanies.jsx
-│ │ │ ├── AdminDonations.jsx
-│ │ │ ├── AdminLayout.jsx
-│ │ │ ├── AdminReports.jsx
-│ │ │ ├── AdminSettings.jsx
-│ │ │ ├── AdminUsers.jsx
-│ │ │ ├── CampaignChart.jsx
-│ │ │ ├── CompanyDetail.jsx
-│ │ │ ├── DemographicsChart.jsx
-│ │ │ ├── Header.jsx
-│ │ │ ├── LatestDonations.jsx
-│ │ │ ├── PendingApprovals.jsx
-│ │ │ ├── RecentActivities.jsx
-│ │ │ ├── RevenueChart.jsx
-│ │ │ ├── Sidebar.jsx
-│ │ │ └── StatCards.jsx
-│ │ │
-│ │ ├── /browse-projects # Project discovery components
-│ │ │ └── ProjectCard.jsx
-│ │ │
-│ │ ├── /company-dashboard # Company dashboard components
-│ │ │ ├── /metrics
-│ │ │ │ ├── AverageDonation.jsx
-│ │ │ │ ├── DaysLeft.jsx
-│ │ │ │ ├── Supporters.jsx
-│ │ │ │ └── TotalRaised.jsx
-│ │ │ │
-│ │ │ ├── CampaignMilestones.jsx
-│ │ │ ├── CampaignPerformance.jsx
-│ │ │ ├── CampaignUpdates.jsx
-│ │ │ ├── CompanyHeader.jsx
-│ │ │ ├── CompanyNavbar.jsx
-│ │ │ ├── EngagementMetrics.jsx
-│ │ │ ├── MetricsGrid.jsx
-│ │ │ ├── RecentActivity.jsx
-│ │ │ ├── SocialMediaImpact.jsx
-│ │ │ └── TopSupporters.jsx
-│ │ │
-│ │ ├── /create-campaign # Campaign creation wizard
-│ │ │ ├── BasicDetailsStep.jsx
-│ │ │ ├── Footer.jsx
-│ │ │ ├── FundingGoalsStep.jsx
-│ │ │ ├── Header.jsx
-│ │ │ ├── MediaUploadStep.jsx
-│ │ │ ├── PreviewStep.jsx
-│ │ │ ├── RewardsStep.jsx
-│ │ │ ├── Sidebar.jsx
-│ │ │ ├── StepIndicator.jsx
-│ │ │ └── StoryStep.jsx
-│ │ │
-│ │ └── /user-dashboard # User dashboard components
-│ │ ├── Achievements.jsx
-│ │ ├── ActiveCampaigns.jsx
-│ │ ├── DonationSummary.jsx
-│ │ ├── ImpactStories.jsx
-│ │ ├── Notifications.jsx
-│ │ ├── RecentActivity.jsx
-│ │ ├── UpcomingEvents.jsx
-│ │ └── UserProfile.jsx
-│ │
-│ ├── AdminDashboard.jsx # Main admin dashboard page
-│ ├── AdminReports.jsx # Reporting interface
-│ ├── AdminSettings.jsx # System configuration
-│ ├── AdminUsers.jsx # User management
-│ ├── BrowseProjects.jsx # Project discovery page
-│ ├── CampaignDetails.jsx # Campaign detail view
-│ ├── Careers.jsx # Careers page
-│ ├── ComingSoon.jsx # Placeholder for upcoming features
-│ ├── CommunityGuidelines.jsx # Community rules
-│ ├── CompanyDashboard.jsx # Main company dashboard
-│ ├── ContactUs.jsx # Contact form
-│ ├── CreateCampaign.jsx # Campaign creation entry point
-│ ├── CreatorResources.jsx # Creator educational resources
-│ ├── DonationForm.jsx # Donation processing form
-│ ├── Footer.jsx # Global footer
-│ ├── HelpCenter.jsx # Support center
-│ ├── Home.jsx # Landing page
-│ ├── HowItWorks.jsx # Platform explanation
-│ ├── Impact.jsx # Success metrics
-│ ├── Login.jsx # Authentication
-│ ├── MediaPressHub.jsx # Press resources
-│ ├── Navbar.jsx # Global navigation
-│ ├── NotificationsPage.jsx # Notification center
-│ ├── Registration.jsx # User registration
-│ ├── SuccessStories.jsx # Case studies
-│ └── UserDashboard.jsx # Main user dashboard
+│   ├── /components         # Reusable components organized by feature
+│   │   ├── /admin-campaigns       # Admin campaign management
+│   │   │   ├── AdminCampaigns.jsx
+│   │   │   ├── CampaignDetail.jsx
+│   │   │   ├── Campaigns.jsx
+│   │   │   ├── CompaniesOverview.jsx
+│   │   │   ├── CreateCampaign.jsx
+│   │   │   └── EditCampaign.jsx
+│   │   │
+│   │   ├── /admin-dashboard       # Admin analytics dashboard
+│   │   │   ├── AdminAnalytics.jsx
+│   │   │   ├── AdminCompanies.jsx
+│   │   │   ├── AdminDonations.jsx
+│   │   │   ├── AdminLayout.jsx
+│   │   │   ├── AdminReports.jsx
+│   │   │   ├── AdminSettings.jsx
+│   │   │   ├── AdminUsers.jsx
+│   │   │   ├── CampaignChart.jsx
+│   │   │   ├── CompanyDetail.jsx
+│   │   │   ├── DemographicsChart.jsx
+│   │   │   ├── Header.jsx
+│   │   │   ├── LatestDonations.jsx
+│   │   │   ├── PendingApprovals.jsx
+│   │   │   ├── RecentActivities.jsx
+│   │   │   ├── RevenueChart.jsx
+│   │   │   ├── Sidebar.jsx
+│   │   │   └── StatCards.jsx
+│   │   │
+│   │   ├── /browse-projects       # Project discovery components
+│   │   │   └── ProjectCard.jsx
+│   │   │
+│   │   ├── /company-dashboard     # Company dashboard components
+│   │   │   ├── /metrics
+│   │   │   │   ├── AverageDonation.jsx
+│   │   │   │   ├── DaysLeft.jsx
+│   │   │   │   ├── Supporters.jsx
+│   │   │   │   └── TotalRaised.jsx
+│   │   │   ├── CampaignMilestones.jsx
+│   │   │   ├── CampaignPerformance.jsx
+│   │   │   ├── CampaignUpdates.jsx
+│   │   │   ├── CompanyHeader.jsx
+│   │   │   ├── CompanyNavbar.jsx
+│   │   │   ├── EngagementMetrics.jsx
+│   │   │   ├── MetricsGrid.jsx
+│   │   │   ├── RecentActivity.jsx
+│   │   │   ├── SocialMediaImpact.jsx
+│   │   │   └── TopSupporters.jsx
+│   │   │
+│   │   ├── /create-campaign       # Campaign creation wizard
+│   │   │   ├── BasicDetailsStep.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── FundingGoalsStep.jsx
+│   │   │   ├── Header.jsx
+│   │   │   ├── MediaUploadStep.jsx
+│   │   │   ├── PreviewStep.jsx
+│   │   │   ├── RewardsStep.jsx
+│   │   │   ├── Sidebar.jsx
+│   │   │   ├── StepIndicator.jsx
+│   │   │   └── StoryStep.jsx
+│   │   │
+│   │   └── /user-dashboard        # User dashboard components
+│   │       ├── Achievements.jsx
+│   │       ├── ActiveCampaigns.jsx
+│   │       ├── DonationSummary.jsx
+│   │       ├── ImpactStories.jsx
+│   │       ├── Notifications.jsx
+│   │       ├── RecentActivity.jsx
+│   │       ├── UpcomingEvents.jsx
+│   │       └── UserProfile.jsx
+│   │
+│   ├── /data               # Static data for the application
+│   │   |
+│   │   └── homeData.js  # Home page data
+│   │
+│   ├── /firebase           # Firebase configuration
+│   │   ├── firebase.js     # Firebase initialization
+│   │   ├── auth.jsx        # Firebase authentication rules
+│   │
+│   ├── /redux              # Redux store configuration
+│   │   ├── /features       # Redux slices
+│   │   │   ├── campaignSlice.js   # Campaign state management
+│   │   │   ├── donationSlice.js   # Donation state management
+│   │   │   ├── adminSlice.js      # Admin state management
+│   │   │   ├── authSlice.js       # Auth state management
+│   │   │   ├── companySlice.js    # Company state management
+│   │   │   ├── notificationSlice.js # Notification state management
+│   │   │   ├── themeSlice.js      # Theme state management
+│   │   │   ├── projectSlice.js    # Project state management
+│   │   │   └── favoriteSlice.js   # Favorite state management
+│   │   └── store.js        # Redux store configuration
+│   │
+│   ├── /router             # React Router configuration
+│   │   |
+│   │   └── PrivateRoute.jsx # Public route component
+│   │
+│   │
+│   ├── App.jsx             # Main application component
+│   ├── index.js            # Entry point
+│   ├── index.css           # Global styles
+│   └── main.jsx            # Main application component
 │
-│ ├── /data # Reusable components organized by feature
-│ │ │
-│ │ ├── homeData.js # Home page data
-│ │
-│ ├── /firebase # Firebase configuration
-│ │ ├── firebase.js # Firebase initialization
-│ │ ├── auth.jsx # Firebase rules
-│
-│
-│ ├── /redux # Redux store configuration
-│ │ │
-│ │ ├── /features # Redux slices
-│ │ │ ├── campaignSlice.js # Campaign state management
-│ │ │ ├── donationSlice.js # Donation state management
-│ │ │ └── adminSlice.js # Admin state management
-│ │ │ └── authSlice.js # Auth state management
-│ │ │ └── companySlice.js # Company state management
-│ │ │ └── notificationSlice.js # Notification state management
-│ │ │ └── themeSlice.js # Theme state management
-│ │ │ └── projectSlice.js # Project state management
-│ │ │ └── favoriteSlice.js # Favorite state management
-│ │
-│ │ ├── store.js # Redux store configuration
-│ │
-│ ├── /router # React Router configuration
-│ │ │ |--PrivateRoute.jsx # Private route component
-│ │ │
-│ │ │
-│ │ │
-│ │ ├── App.jsx # Main application component
-│ │ ├── index.js # Entry point
-│ │ └── index.css # Global styles
-│ │ └── main.jsx # Main application component
-│
-├── package.json # Project dependencies
-└── README.md # Project documentation
+├── .env                    # Environment variables
+├── .gitignore              # Git ignore file
+├── package.json            # Project dependencies
+├── README.md               # Project documentation
+└── LICENSE                 # License file
 
 ---
 
