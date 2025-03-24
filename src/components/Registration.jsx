@@ -41,7 +41,7 @@ function Registration() {
   const [adminData, setAdminData] = useState({
     emailOrUsername: "",
     password: "",
-    verificationCode: "",
+    verificationCode: "123456",
     role: "admin",
   });
 
